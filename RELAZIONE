@@ -1,0 +1,37 @@
+RELAZIONE
+
+
+
+1. Perché gli "Include Guards" (#ifndef, #define, #endif)?
+
+
+\\ Il problema: Se il file Mappa.hpp include Giocatore.hpp, e il tuo main.cpp include entrambi, il compilatore leggerebbe la classe Giocatore due volte. Risultato: Errore di "Redefinition of class".
+
+La soluzione: Queste tre righe garantiscono che il contenuto venga letto una sola volta in tutta la compilazione. È lo standard professionale in C++.
+
+2. La scelta dei modificatori d'accesso: Perché protected e non private?
+
+Questa è la scelta più strategica per te, che sei il Componente #1 (Giocatore e Nemici).
+
+private: Le variabili sono visibili solo dentro la classe Giocatore.
+
+protected: Le variabili sono visibili alla classe Giocatore e a tutte le classi che erediteranno da lei.
+
+La motivazione: Siccome devi gestire anche i Nemici, è molto probabile che creerai una gerarchia (es. una classe base Entita). Se metti x e y come protected, quando scriverai la classe Nemico, essa potrà accedere a x e y direttamente senza dover usare funzioni complicate. È una scelta di design orientato all'ereditarietà.
+
+3. Perché public per i metodi?
+
+Il public è l'interfaccia, ovvero il "telecomando" che gli altri componenti usano per interagire con il tuo giocatore.
+
+muovi(int input): È perfetto perché separa i compiti. Tu non leggi la tastiera dentro la classe (compito del Main), ma ricevi il comando e decidi come reagire.
+
+I Getter (getY, getX): Fondamentali per l'incapsulamento. Gli altri componenti (es. la Mappa) devono sapere dove sei, ma non devono poter cambiare la tua posizione a loro piacimento. Possono solo "leggere" le coordinate.
+
+
+Riassunto per la tua Relazione (LLM Task)
+
+Visto che il PDF richiede di discutere l'uso degli LLM (pagina 28), ecco un punto che puoi scrivere:
+
+"Ho utilizzato un LLM per discutere l'architettura della classe Giocatore. Inizialmente l'idea era di usare attributi private, ma l'analisi ha evidenziato che l'uso di protected è superiore per il Componente #1, poiché agevola l'estensibilità verso la classe Nemici tramite ereditarietà, riducendo la duplicazione del codice."
+
+Ti sembra una struttura chiara? Se vuoi, possiamo passare a definire la classe base Entita così risparmi lavoro per i nemici!
