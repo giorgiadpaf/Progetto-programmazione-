@@ -20,7 +20,7 @@ public:
     void controllaDanni();
     void decrementaInvulnerabilita();
     void controllaDanni(Nemico* listaNemici[], int numeroNemici);
-    void disegna(); // Questa mancava!
+    void disegna();
     int getVite() const;
 };
 #endif
