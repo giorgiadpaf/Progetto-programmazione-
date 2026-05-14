@@ -3,7 +3,7 @@
 #include <ctime>
 #include "Mappa.hpp"
 #include "Nemico.hpp"
-#include "NemicoSparante.hpp" // Aggiungi questa riga in alto
+#include "NemicoSparante.hpp"
 #include "Giocatore.hpp"
 int main() {
     initscr();
@@ -13,7 +13,7 @@ int main() {
     srand(time(NULL));
 
     Mappa mappa;
-    // Corretta la parentesi e rimosso 'new' per semplicità nel test
+    
     Giocatore player(18, 38, &mappa);
     Nemico n1(1, 1, &mappa, 1);
     Nemico n2(1, 2, &mappa, 2);
