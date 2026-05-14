@@ -2,7 +2,7 @@
 #define MAPPA_HPP
 class Mappa {
 public:
-    // Ritorna vero se siamo dentro il rettangolo 40x20 (Slide 20)
+    // Ritorna vero se dentro il rettangolo 40x20
     bool isVuoto(int y, int x) {
         return (y > 0 && y < 19 && x > 0 && x < 39);
     }
