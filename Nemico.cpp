@@ -30,28 +30,25 @@ int Nemico::movimento(int pY, int pX, int dirCorrente) {
     int nextX = x;
 
     if (tipo == 1) {
-        // --- TIPO 1: MOVIMENTO CON INERZIA ---
-        // Proviamo a continuare nella direzione attuale (dirCorrente)
+        
         if (dirCorrente == 0) nextY--;      // Su
         else if (dirCorrente == 1) nextY++; // Giu
         else if (dirCorrente == 2) nextX--; // Sx
         else if (dirCorrente == 3) nextX++; // Dx
 
-        // Se sbattiamo contro un muro o decidiamo di cambiare (1 possibilità su 10)
         if (!punmappa->isVuoto(nextY, nextX) || (rand() %  20 == 0)) {
-            dirCorrente = rand() % 4; // Cambia direzione solo quando serve
+            dirCorrente = rand() % 4;
             return dirCorrente; // Salta questo turno per "girarsi"
         }
     } else if (tipo == 2 || tipo == 3) {
-        // --- TIPO 2: INSEGUITORE (Efficienza Tattica) ---
-        // Invece di rand, riduciamo la distanza dal giocatore
+       
         if (pX > x && punmappa->isVuoto(y, x + 1)) nextX++;
         else if (pX < x && punmappa->isVuoto(y, x - 1)) nextX--;
         else if (pY > y && punmappa->isVuoto(y + 1, x)) nextY++;
         else if (pY < y && punmappa->isVuoto(y - 1, x)) nextY--;
     }
 
-    // Applichiamo il movimento calcolato
+
     y = nextY;
     x = nextX;
     return dirCorrente;
