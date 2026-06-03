@@ -17,6 +17,8 @@ public:
     NemicoSparante(int y, int x, Mappa* m);
     int movimento(int pY, int pX, int dirCorrente);
     void disegna();
+    int getYp() const;
+    int getXp() const;
 
 };
 #endif
