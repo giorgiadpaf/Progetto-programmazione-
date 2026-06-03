@@ -16,5 +16,7 @@ public:
     void disegna();
     void controllaMorte(); 
     bool isVivo() const;
+    virtual int getYp() const;
+    virtual int getXp() const;
 };
 #endif
