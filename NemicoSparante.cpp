@@ -49,7 +49,13 @@ int NemicoSparante::movimento(int pY, int pX, int dirCorrente){
     return nuovaDir;
 }
 
+int NemicoSparante::getYp(){
+    return yp;
+}
 
+int NemicoSparante::getXp(){
+    return xp;
+}
 
 void NemicoSparante::disegna(){
     Nemico::disegna();
