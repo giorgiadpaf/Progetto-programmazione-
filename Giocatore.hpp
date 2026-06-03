@@ -17,7 +17,6 @@ public:
     Giocatore(int y, int x, Mappa* mappa);
     // Funzione per cambiare le coordinate in base al tasto premuto
     void muovi(int input);
-    void controllaDanni();
     void decrementaInvulnerabilita();
     void controllaDanni(Nemico* listaNemici[], int numeroNemici);
     void disegna();
