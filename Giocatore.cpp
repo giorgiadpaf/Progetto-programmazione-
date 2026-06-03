@@ -37,19 +37,31 @@ void Giocatore::muovi(int input){
    // }
 
 }
-
 void Giocatore::controllaDanni(Nemico* listaNemici[], int numeroNemici) {
+    if (invulnerabile > 0) return;
+
+    // Controllo Fuoco
     if (punmappa->isRed(y, x)) {
         vite--;
-        invulnerabile = 20; //invulnerabile 1-2 secondi (20 cicli)
+        invulnerabile = 20; 
         return;
     }
 
     for (int i = 0; i < numeroNemici; i++) {
+        if (!listaNemici[i]->isVivo()) continue;
+
+        // CONTROLLO CORPO DEL NEMICO
         if (listaNemici[i]->getY() == y && listaNemici[i]->getX() == x) {
             vite--;
-            y = startY;
+            y = startY; // Respawn per contatto fisico
             x = startX;
+            invulnerabile = 20;
+            return;
+        }
+
+        // CONTROLLO PROIETTILE
+        if (listaNemici[i]->getYp() == y && listaNemici[i]->getXp() == x) {
+            vite--;
             invulnerabile = 20;
             return;
         }
