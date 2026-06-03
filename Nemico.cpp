@@ -70,8 +70,8 @@ void Nemico::controllaMorte() {
     }
 }
 
-virtual int getYp() const { return -1; }
-virtual int getXp() const { return -1; }
+virtual int Nemico::getYp() const { return -1; }
+virtual int Nemico::getXp() const { return -1; }
 
 bool Nemico::isVivo() const {
     return vivo;
