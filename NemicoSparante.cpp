@@ -49,11 +49,11 @@ int NemicoSparante::movimento(int pY, int pX, int dirCorrente){
     return nuovaDir;
 }
 
-int NemicoSparante::getYp(){
+int NemicoSparante::getYp() const {
     return yp;
 }
 
-int NemicoSparante::getXp(){
+int NemicoSparante::getXp() const {
     return xp;
 }
 
