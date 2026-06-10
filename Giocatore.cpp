@@ -9,6 +9,7 @@ Giocatore::Giocatore(int y, int x, Mappa* mappa) : Entita(y, x, mappa, 'A') {
     this->startY = y; // posizione iniziale
     this->startX = x;
     this->invulnerabile = 0;
+    this->punteggio = 0;
 }
 
 
@@ -88,3 +89,12 @@ int Giocatore::getVite() const{
     return vite;
 }
 
+
+int Giocatore::aggiungiPunteggio(int punti){
+    this->punteggio += punti;
+}
+
+
+int Giocatore::getPunteggio() const{
+    return punteggio;
+}
