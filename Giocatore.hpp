@@ -22,5 +22,7 @@ public:
     void controllaDanni(Nemico* listaNemici[], int numeroNemici);
     void disegna();
     int getVite() const;
+    int getPunteggio() const;
+    int aggiungiPunteggio(int p);
 };
 #endif
