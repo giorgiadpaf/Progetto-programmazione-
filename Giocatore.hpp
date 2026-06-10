@@ -12,6 +12,7 @@ private:
     int startY;
     int startX;
     int invulnerabile;
+    int punteggio;
 
 public:
     Giocatore(int y, int x, Mappa* mappa);
