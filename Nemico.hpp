@@ -3,6 +3,9 @@
 #include "Entita.hpp"
 #include <ncurses.h>
 
+class Mappa;
+class Bombe; //MODIFICA: dichiarazine classe Bombe
+
 class Nemico : public Entita {
 protected:
     bool vivo; // 1 se è in gioco, 0 se è stato colpito
@@ -14,7 +17,7 @@ public:
     Nemico(int y, int x, Mappa* m, int t);
     int movimento(int pY, int pX, int dirCorrente);
     void disegna();
-    void controllaMorte(); 
+    void controllaMorte(Bombe* pBombe); //MODIFICA: aggiunto il puntatore
     bool isVivo() const;
     virtual int getYp() const;
     virtual int getXp() const;

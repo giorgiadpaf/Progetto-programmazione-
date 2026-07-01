@@ -1,10 +1,11 @@
-//#include "Bomba.hpp"
 #include "Mappa.hpp"
 #include "Giocatore.hpp"
 #include "Nemico.hpp"
+#include "Bombe.hpp" //MODIFICA: inclusione header
 
-Giocatore::Giocatore(int y, int x, Mappa* mappa) : Entita(y, x, mappa, 'A') {
-    // this->pbombe = pBombe;
+//MODIFICA: aggiornato il costruttore
+Giocatore::Giocatore(int y, int x, Mappa* mappa, Bombe* pBombe) : Entita(y, x, mappa, 'A') {
+    this->pBombe = pBombe;
     this->vite = 3;
     this->startY = y; // posizione iniziale
     this->startX = x;
@@ -28,18 +29,27 @@ void Giocatore::muovi(int input){
     else if (input == 's' || input == KEY_DOWN) {
         newy++;
     }
-    if(punmappa->isVuoto(newy, newx)){ //}  && !pBombe->cEunaBomba(newy, newx)){
+    if(punmappa->isVuoto(newy, newx)  && !pBombe->cEunaBomba(newy, newx)){
             y=newy;
             x=newx;
         }
 
-    // if (input == ' ') {
-     //   pBombe->aggiungiBomba(y, x);
-   // }
+     if (input == ' ') {
+        pBombe->aggiungiBomba(y, x);
+    }
 
 }
 void Giocatore::controllaDanni(Nemico* listaNemici[], int numeroNemici) {
     if (invulnerabile > 0) return;
+
+    //MODIFICA: verifica se il giocatore viene preso dall'esplosione della bobma
+    if(pBombe->colpitaDaEsplosione(y, x)){
+	    vite--;
+	    y = startY;
+	    x = startX;
+	    invulnerabile = 20;
+	    return;
+    }
 
     // Controllo Fuoco
     if (punmappa->isRed(y, x)) {
@@ -92,6 +102,7 @@ int Giocatore::getVite() const{
 
 int Giocatore::aggiungiPunteggio(int punti){
     this->punteggio += punti;
+    return this->punteggio;
 }
 
 

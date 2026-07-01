@@ -4,18 +4,20 @@
 #include <ncurses.h>
 
 class Nemico;
+class Bombe; //MODIFICA: aggiunta la classe Bombe
 
 class Giocatore : public Entita {
 private:
     int vite;
-    //Bombe* pbombe;
+    Bombe* pBombe; //MODIFICA: puntatore al gestore delle bombe
     int startY;
     int startX;
     int invulnerabile;
     int punteggio;
 
 public:
-    Giocatore(int y, int x, Mappa* mappa);
+    //MODIFICA: aggiunto pBombe ai parametri del costruttore
+    Giocatore(int y, int x, Mappa* mappa, Bombe* pBombe);
     // Funzione per cambiare le coordinate in base al tasto premuto
     void muovi(int input);
     void decrementaInvulnerabilita();

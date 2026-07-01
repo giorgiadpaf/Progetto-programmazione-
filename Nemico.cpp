@@ -1,5 +1,6 @@
 #include "Mappa.hpp"
 #include "Nemico.hpp"
+#include "Bombe.hpp" //MODIFICA: inclusione header
 #include <cstdlib>
 #include <ctime>
 
@@ -62,10 +63,12 @@ void Nemico::disegna() {
     attroff(COLOR_PAIR(2));
 }
 
-void Nemico::controllaMorte() {
-    if (punmappa->isRed(y, x)) {
+//MODIFICA: sostituita la funzione isRed() con la logica delle bombe
+//se nemico viene preso da raggio esplosione, muore
+void Nemico::controllaMorte(Bombe* pBombe) {
+    if (this->vivo == 1 && pBombe->colpitaDaEsplosione(y, x)) { 
         this->vivo=0;
-        this->y = -1;
+        this->y = -1; //MODIFICA: spostato fuori dallo schermo
         this->x = -1;
     }
 }
