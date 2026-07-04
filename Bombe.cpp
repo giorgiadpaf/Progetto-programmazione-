@@ -1,12 +1,12 @@
 #include "Bombe.hpp"
-#include "Mappa.hpp"
+#include "Map.hpp"
 
-Bombe::Bombe(Mappa* mappa) {
+Bombe::Bombe(Map* mappa) {
     raggioAttuale = 1; //raggio iniziale standard
-    
+
     //array statico inizializzato associando la mappa a ciascuna bomba
     for (int i = 0; i < MAX_BOMBE; i++) {
-        inventario[i] = Bomba(mappa); 
+        inventario[i] = Bomba(mappa);
     }
 }
 
@@ -25,7 +25,7 @@ bool Bombe::cEunaBomba(int y, int x) {
     // per impedire al giocatore di camminarci sopra
     for (int i = 0; i < MAX_BOMBE; i++) {
         if (inventario[i].isAttiva() && inventario[i].getY() == y && inventario[i].getX() == x) {
-            return true; 
+            return true;
         }
     }
     return false;

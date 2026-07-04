@@ -1,30 +1,30 @@
-#ifndef GIOCATORE_HPP
-#define GIOCATORE_HPP
+#pragma once
 #include "Entita.hpp"
 #include <ncurses.h>
 
+class Map;
 class Nemico;
-class Bombe; //MODIFICA: aggiunta la classe Bombe
+class Bombe;
+struct enemylist;
 
 class Giocatore : public Entita {
 private:
     int vite;
-    Bombe* pBombe; //MODIFICA: puntatore al gestore delle bombe
+    Bombe* pBombe;
     int startY;
     int startX;
     int invulnerabile;
     int punteggio;
 
 public:
-    //MODIFICA: aggiunto pBombe ai parametri del costruttore
-    Giocatore(int y, int x, Mappa* mappa, Bombe* pBombe);
-    // Funzione per cambiare le coordinate in base al tasto premuto
+    Giocatore(int y, int x, Map* mappa, Bombe* pBombe);
     void muovi(int input);
     void decrementaInvulnerabilita();
-    void controllaDanni(Nemico* listaNemici[], int numeroNemici);
+    void controllaDanni(enemylist* listanemici);
     void disegna();
     int getVite() const;
     int getPunteggio() const;
     int aggiungiPunteggio(int p);
+    void cambiaLivello(Map* nuovaMappa, int nuovoY, int nuovoX); //aggiunto per non dover instanziare di nuovo
+                                                                 //il giovatore quando si passa al nuovo livello
 };
-#endif

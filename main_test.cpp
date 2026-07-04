@@ -1,70 +1,152 @@
+#include <clocale>
+#include <cstddef>
 #include <ncurses.h>
 #include <cstdlib>
 #include <ctime>
-#include "Mappa.hpp"
+#include "Map.hpp"
 #include "Nemico.hpp"
 #include "NemicoSparante.hpp"
 #include "Giocatore.hpp"
-#include "Bombe.hpp" //MODIFICA: inclusione header
+#include "Bombe.hpp"
+#include <fstream>
+#include <cstring>
 
+//funzione che fa il parsing di un file e costruisce direttamente la lista di livelli
+// inserisce sia la lista di nemici sia il punto di spawn del giocatore e concatena tutte le mappe
+
+Map* loadMapsFromFile(const char* fileName, WINDOW* win) {
+    std::ifstream file(fileName);
+    if (!file.is_open()) {
+        return NULL;
+    }
+
+    Map* head = NULL;
+    Map* currentMap = NULL;
+    char word[256];
+
+    while (file >> word) {
+        if (strcmp(word, "MAPPA") == 0) {
+            char newLogic[20][41];
+
+            for (int i = 0; i < 20; i++) {
+                file >> word;
+                for (int k = 0; k < 40; k++) {
+                    newLogic[i][k] = word[k];
+                }
+                newLogic[i][40] = '\0';
+            }
+
+            int spawnX = 0, spawnY = 0;
+            int enemiesX[50], enemiesY[50], enemiesType[50];
+            int numEnemies = 0;
+
+            while (file >> word && strcmp(word, "FINE_MAPPA") != 0) {
+                if (strcmp(word, "SPAWN") == 0) {
+                    file >> spawnX >> spawnY;
+                }
+                else if (strcmp(word, "NEMICO") == 0) {
+                    file >> enemiesY[numEnemies] >> enemiesX[numEnemies] >> enemiesType[numEnemies];
+                    numEnemies++;
+                }
+            }
+
+            Map* newMap = new Map(currentMap, NULL, newLogic, spawnX, spawnY, win, NULL);
+
+            for (int i = 0; i < numEnemies; i++) {
+                newMap->addenemy(enemiesY[i], enemiesX[i], enemiesType[i]);
+            }
+
+            if (head == NULL) {
+                head = newMap;
+                currentMap = newMap;
+            } else {
+                currentMap->addmapinq(newMap);
+                currentMap = newMap;
+            }
+        }
+    }
+
+    file.close();
+    return head;
+}
+//main aggiornato per permettere al giocatore di muoversi tra una mappa e l'altra
+//i nemici non si muovono, non so come funzionano
 int main() {
+    setlocale(LC_ALL, "");
     initscr();
     noecho();
     curs_set(0);
     timeout(50);
     srand(time(NULL));
 
-    Mappa mappa;
-    Bombe gestoreBombe(&mappa); //MODIFICA: inizializzato il gestore delle bombe passandogli mappa
-    
-    Giocatore player(18, 38, &mappa, &gestoreBombe); //MODIFICA: passato il gestore al costruttore 
-    Nemico n1(1, 1, &mappa, 1);
-    Nemico n2(1, 2, &mappa, 2);
-    NemicoSparante n3(1,5, &mappa);
-    int d = 1;
-    while (true) {
+    Map* mappa = loadMapsFromFile("Maps.txt", stdscr);
+    if (mappa == NULL) {
+        endwin();
+        printf("Errore: Impossibile caricare il file Maps.txt\n");
+        return 1;
+    }
+
+    Bombe gestoreBombe(mappa);
+    Giocatore player(mappa->_xPspawn(), mappa->_yPspawn(), mappa, &gestoreBombe);
+
+    bool running = true;
+
+    while (running) {
         int c = getch();
         if (c == 'q') break;
 
+        enemylist* elist = mappa->_enemylist();
+
         player.muovi(c);
-        int y = player.getY();
-        int x = player.getX();
-        d = n1.movimento(0,0,d);
-        n2.movimento(y,x,0);
-        n3.movimento(y,x,0);
-        Nemico* lista[] = { &n1, &n2, &n3 };
-        player.controllaDanni(lista, 3);
+
+        if (mappa->isonN(player)) { // Portale Successivo
+            Map* prossima = mappa->nextlvl();
+            if (prossima != NULL) {
+                mappa = prossima;
+                gestoreBombe = Bombe(mappa); // Ricrea il gestore bombe per la nuova mappa
+                player.cambiaLivello(mappa, mappa->_xPspawn(), mappa->_yPspawn());
+                elist = mappa->_enemylist(); // Aggiorna immediatamente la lista nemici
+            }
+        }
+        else if (mappa->isonP(player)) { // Portale Precedente
+            Map* precedente = mappa->preclvl();
+            if (precedente != NULL) {
+                mappa = precedente;
+                gestoreBombe = Bombe(mappa);
+                player.cambiaLivello(mappa, mappa->_xPspawn(), mappa->_yPspawn());
+                elist = mappa->_enemylist();
+            }
+        }
+
+        enemylist* tmp = elist;
+        while (tmp != NULL) {
+           tmp->enemy->controllaMorte(&gestoreBombe);
+           tmp = tmp->next;
+        }
+        player.controllaDanni(elist);
         player.decrementaInvulnerabilita();
 
-	//MODIFICA: aggiunto controllo morte per ogni nemico
-	n1.controllaMorte(&gestoreBombe);
-	n2.controllaMorte(&gestoreBombe);
-	n3.controllaMorte(&gestoreBombe);
-
         clear();
-        // Disegna i bordi
-        for(int i=0; i<40; i++) { mvaddch(0, i, '-'); mvaddch(19, i, '-'); }
-        for(int i=0; i<20; i++) { mvaddch(i, 0, '|'); mvaddch(i, 39, '|'); }
 
+        mappa->printonscr();
+        gestoreBombe.aggiornaEStampa();
+        tmp = elist;
+        while (tmp != NULL) {
+           tmp->enemy->disegna();
+           tmp = tmp->next;
+        }
         player.disegna();
-        n1.disegna();
-        n2.disegna();
-        n3.disegna();
-        
-	//MODIFICA: chiamata che aggiorna i timer delle bombe e stampa esplosione bombe
-	gestoreBombe.aggiornaEStampa();
+    	mvprintw(20, 0, "Vite: %d", player.getVite());
 
-	mvprintw(0, 0, "Vite: %d", player.getVite());
-        if(player.getVite() <= 0){
+        if (player.getVite() <= 0) {
             clear();
             mvprintw(10, 15, "GAME OVER - Hai perso tutte le vite");
             mvprintw(12, 12, "Premi un tasto per chiudere il gioco...");
-            timeout(-1); // Disabilita il timeout (aspetta per sempre)
+            timeout(-1);
             refresh();
-            getch();    // Aspetta l'input dell'utente
-            break;
+            getch(); // Aspetta la pressione di un tasto
+            running = false; // Interrompe il ciclo principale
         }
-        refresh();
     }
 
     endwin();

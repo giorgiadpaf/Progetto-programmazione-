@@ -1,8 +1,6 @@
-
-#include "Mappa.hpp"
 #include "Entita.hpp"
 
-Entita::Entita(int startY, int startX, Mappa* mappa, char sym){
+Entita::Entita(int startY, int startX, Map* mappa, char sym){
     y = startY;
     x = startX;
     simbolo = sym;

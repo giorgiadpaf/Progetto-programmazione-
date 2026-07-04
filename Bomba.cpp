@@ -1,8 +1,8 @@
 #include "Bomba.hpp"
-#include "Mappa.hpp"
+#include "Map.hpp"
 
 // posiziona la bomba nelle coordinate (0, 0)
-Bomba::Bomba(Mappa* mappa) : Entita(0, 0, mappa, 'O') {
+Bomba::Bomba(Map* mappa) : Entita(0, 0, mappa, 'O') {
     attiva = false;
     inEsplosione = false;
     raggio = 3;
@@ -27,23 +27,23 @@ void Bomba::aggiorna() {
             inEsplosione = true;
             tempoEsplosione = time(NULL);
             simbolo = 'X'; // simbolo di bomba esplosa
-            
+
             // logica dei danni
 	    // sotto, sopra, sinstra, destra
-            int direzioni[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; 
+            int direzioni[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 	    for (int d = 0; d < 4; d++) {
                 for (int i = 1; i <= raggio; i++) {
                     int ny = y + (direzioni[d][0] * i);
                     int nx = x + (direzioni[d][1] * i);
-                    
-		    if(!punmappa->isVuoto(ny, nx)) break;
+
+		    if(!punmappa->isempty(ny, nx)) break;
 		}
 	     }
-	    }	
+	    }
     } else {
         //esplosione visibile a schermo per 1 secondo
         if (difftime(time(NULL), tempoEsplosione) >= 1) {
-            disattiva(); //libera lo slot 
+            disattiva(); //libera lo slot
         }
     }
 }
@@ -64,7 +64,7 @@ void Bomba::disegna() {
 				int ny= y + (direzioni[d][0] * i);
 				int nx= x + (direzioni[d][1] * i);
 
-				if(!punmappa->isVuoto(ny, nx)) break;
+				if(!punmappa->isempty(ny, nx)) break;
 
 				mvaddch(ny, nx, 'X');
 			}
@@ -83,9 +83,9 @@ bool Bomba::colpisce(int testY, int testX) const {
         for (int i = 1; i <= raggio; i++) {
             int ny = y + (direzioni[d][0] * i);
             int nx = x + (direzioni[d][1] * i);
-            
-            if (!punmappa->isVuoto(ny, nx)) break;
-            
+
+            if (!punmappa->isempty(ny, nx)) break;
+
             if (testY == ny && testX == nx) return true;
         }
     }

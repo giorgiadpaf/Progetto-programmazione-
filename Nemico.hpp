@@ -1,25 +1,24 @@
-#ifndef NEMICO_HPP
-#define NEMICO_HPP
+#pragma once
 #include "Entita.hpp"
 #include <ncurses.h>
 
-class Mappa;
-class Bombe; //MODIFICA: dichiarazine classe Bombe
+class Map;
+class Bombe;
 
 class Nemico : public Entita {
 protected:
-    bool vivo; // 1 se è in gioco, 0 se è stato colpito
-    int tipo; // 1 = Casuale, 2 = Inseguitore (o veloce)
-    int frameDelay; // Per gestire la velocità
+    bool vivo;
+    int tipo;
+    int frameDelay;
     int frameCounter;
 
 public:
-    Nemico(int y, int x, Mappa* m, int t);
+    Nemico(int y, int x, Map* m, int t);
     int movimento(int pY, int pX, int dirCorrente);
     void disegna();
-    void controllaMorte(Bombe* pBombe); //MODIFICA: aggiunto il puntatore
+    void controllaMorte(Bombe* pBombe);
+
     bool isVivo() const;
     virtual int getYp() const;
     virtual int getXp() const;
 };
-#endif

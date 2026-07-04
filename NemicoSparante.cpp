@@ -1,7 +1,7 @@
 #include "NemicoSparante.hpp"
-#include "Mappa.hpp"
+#include "Map.hpp"
 
-NemicoSparante::NemicoSparante(int y, int x, Mappa* m) : Nemico(y, x, m, 3){
+NemicoSparante::NemicoSparante(int y, int x, Map* m) : Nemico(y, x, m, 3){
     this->dirProiettile = -1;
     this->frameProi=0;
     this->xp=-1;
@@ -12,22 +12,22 @@ int NemicoSparante::movimento(int pY, int pX, int dirCorrente){
     int nuovaDir = Nemico::movimento(pY, pX, dirCorrente); //AVEVO SBAGLIATO IL RICHIAMO
 
     if (dirProiettile == -1) {
-        if (pY < y && pX == x && punmappa->isVuoto(y - 1, x)) {
+        if (pY < y && pX == x && punmappa->isempty(y - 1, x)) {
             dirProiettile=0;
             yp=y-1;
             xp=x;
         }
-        else if (pY > y && pX == x && punmappa->isVuoto(y+1, x)) {
+        else if (pY > y && pX == x && punmappa->isempty(y+1, x)) {
             dirProiettile=1;
             yp=y+1;
             xp=x;
         }
-        else if (pX < x && pY == y && punmappa->isVuoto(y, x - 1)){
+        else if (pX < x && pY == y && punmappa->isempty(y, x - 1)){
             dirProiettile=2;
             yp=y;
             xp=x-1;
         }
-        else if (pX > x && pY == y && punmappa->isVuoto(y, x+1)) {
+        else if (pX > x && pY == y && punmappa->isempty(y, x+1)) {
             dirProiettile=3;
             yp=y;
             xp=x+1;
@@ -41,7 +41,7 @@ int NemicoSparante::movimento(int pY, int pX, int dirCorrente){
             else if (dirProiettile == 1) yp++; // Giu
             else if (dirProiettile == 2) xp--; // Sx
             else if (dirProiettile == 3) xp++;
-            if(!punmappa->isVuoto(yp, xp)) {
+            if(!punmappa->isempty(yp, xp)) {
                 dirProiettile=-1;
             }
         }

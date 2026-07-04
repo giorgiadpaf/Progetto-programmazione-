@@ -1,8 +1,7 @@
-#ifndef BOMBA_HPP
-#define BOMBA_HPP
-
+#pragma once
+#include "Map.hpp"
 #include "Entita.hpp"
-#include <ctime> 
+#include <ctime>
 
 class Bomba : public Entita {
 protected:
@@ -13,7 +12,7 @@ protected:
     time_t tempoEsplosione;  // quando inizia animazione esplosione
 
 public:
-    Bomba(Mappa* mappa = nullptr);
+    Bomba(Map* mappa = nullptr);
 
     //,etodi di azione
     void piazza(int startY, int startX, int raggioBomba);
@@ -30,5 +29,3 @@ public:
     bool isInEsplosione() const;
     int getRaggio() const;
 };
-
-#endif
