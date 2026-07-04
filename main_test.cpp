@@ -10,6 +10,7 @@
 #include "Bombe.hpp"
 #include <fstream>
 #include <cstring>
+#include "Menu.hpp"
 
 //funzione che fa il parsing di un file e costruisce direttamente la lista di livelli
 // inserisce sia la lista di nemici sia il punto di spawn del giocatore e concatena tutte le mappe
@@ -74,10 +75,37 @@ Map* loadMapsFromFile(const char* fileName, WINDOW* win) {
 int main() {
     setlocale(LC_ALL, "");
     initscr();
+    start_color();
     noecho();
     curs_set(0);
+    keypad(stdscr, TRUE); //MODIFICA: funzione per far funzionare le frecce
     timeout(50);
     srand(time(NULL));
+
+    Menu menu;
+    bool avviaGioco = false;
+
+    while(!avviaGioco){
+    	int scelta = menu.opzione();
+
+	if(scelta == 2){
+		endwin();
+		return 0;
+	}
+	else if(scelta == 1){
+		clear();
+		mvprintw(5, 15, "classifica");
+
+		refresh();
+
+		timeout(-1);
+		getch();
+		timeout(50);
+	}
+	else if (scelta == 0){
+		avviaGioco = true;
+	}
+    }
 
     Map* mappa = loadMapsFromFile("Maps.txt", stdscr);
     if (mappa == NULL) {
@@ -99,16 +127,16 @@ int main() {
 
         player.muovi(c);
 
-        if (mappa->isonN(player)) { // Portale Successivo
+        if (mappa->isonN(player)) { 
             Map* prossima = mappa->nextlvl();
             if (prossima != NULL) {
                 mappa = prossima;
-                gestoreBombe = Bombe(mappa); // Ricrea il gestore bombe per la nuova mappa
+                gestoreBombe = Bombe(mappa); 
                 player.cambiaLivello(mappa, mappa->_xPspawn(), mappa->_yPspawn());
-                elist = mappa->_enemylist(); // Aggiorna immediatamente la lista nemici
+                elist = mappa->_enemylist(); 
             }
         }
-        else if (mappa->isonP(player)) { // Portale Precedente
+        else if (mappa->isonP(player)) { 
             Map* precedente = mappa->preclvl();
             if (precedente != NULL) {
                 mappa = precedente;
@@ -136,7 +164,7 @@ int main() {
            tmp = tmp->next;
         }
         player.disegna();
-    	mvprintw(20, 0, "Vite: %d", player.getVite());
+        mvprintw(20, 0, "Vite: %d", player.getVite());
 
         if (player.getVite() <= 0) {
             clear();
@@ -144,8 +172,8 @@ int main() {
             mvprintw(12, 12, "Premi un tasto per chiudere il gioco...");
             timeout(-1);
             refresh();
-            getch(); // Aspetta la pressione di un tasto
-            running = false; // Interrompe il ciclo principale
+            getch(); 
+            running = false; 
         }
     }
 
