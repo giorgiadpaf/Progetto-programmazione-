@@ -85,3 +85,8 @@ void Map::addenemy(int y, int x, int t){
     tmp->next = enemyL;
     enemyL = tmp;
 }
+
+//per esplosione muri
+void Map::setTile(int y, int x, char c){
+	logicmap[y][x]=c;
+}

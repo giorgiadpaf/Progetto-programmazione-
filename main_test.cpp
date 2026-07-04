@@ -75,12 +75,13 @@ Map* loadMapsFromFile(const char* fileName, WINDOW* win) {
 int main() {
     setlocale(LC_ALL, "");
     initscr();
-    start_color();
     noecho();
     curs_set(0);
     keypad(stdscr, TRUE); //MODIFICA: funzione per far funzionare le frecce
     timeout(50);
     srand(time(NULL));
+    start_color();
+    init_pair(1, COLOR_RED, COLOR_BLACK);
 
     Menu menu;
     bool avviaGioco = false;

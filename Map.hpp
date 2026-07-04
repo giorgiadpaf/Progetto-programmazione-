@@ -45,4 +45,6 @@ public:
     //ritornano true se il giocatore è su una porta
     bool isonN(Giocatore& player);
     bool isonP(Giocatore& player);
+
+    void setTile(int y, int x, char c);//per eliminare i muri
 };

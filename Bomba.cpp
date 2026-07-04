@@ -1,11 +1,14 @@
 #include "Bomba.hpp"
 #include "Map.hpp"
+#include <ctime>
+#include <ncurses.h>
 
 // posiziona la bomba nelle coordinate (0, 0)
 Bomba::Bomba(Map* mappa) : Entita(0, 0, mappa, 'O') {
     attiva = false;
     inEsplosione = false;
     raggio = 3;
+    for(int i = 0; i < 4; i++) raggioEffettivo[i] = 0;
 }
 
 void Bomba::piazza(int startY, int startX, int raggioBomba) {
@@ -16,6 +19,10 @@ void Bomba::piazza(int startY, int startX, int raggioBomba) {
     attiva = true;
     inEsplosione = false;
     simbolo = 'O';
+
+    for(int i = 0; i < 4; i++) {
+        raggioEffettivo[i] = 0;
+    }
 }
 
 void Bomba::aggiorna() {
@@ -26,17 +33,29 @@ void Bomba::aggiorna() {
         if (difftime(time(NULL), tempoPiazzamento) >= 3) {
             inEsplosione = true;
             tempoEsplosione = time(NULL);
-            simbolo = 'X'; // simbolo di bomba esplosa
 
             // logica dei danni
 	    // sotto, sopra, sinstra, destra
             int direzioni[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 	    for (int d = 0; d < 4; d++) {
+		raggioEffettivo[d] = 0;
+
                 for (int i = 1; i <= raggio; i++) {
                     int ny = y + (direzioni[d][0] * i);
                     int nx = x + (direzioni[d][1] * i);
 
-		    if(!punmappa->isempty(ny, nx)) break;
+		    char tile = punmappa->whatsthere(ny, nx);
+
+		    if(tile == '#'){
+			    break; //muro indistruttibvile
+		    }
+
+		    raggioEffettivo[d] = i;
+
+		    if(tile == '*'){
+			    punmappa->setTile(ny, nx, '.');
+			    break;
+		    }
 		}
 	     }
 	    }
@@ -55,7 +74,7 @@ void Bomba::disegna() {
 		mvaddch(y, x, simbolo);
 	} else {
 		attron(COLOR_PAIR(1));
-		mvaddch(y, x, 'X');
+		mvprintw(y, x, "%s", "█");
 
 		int direzioni[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
@@ -64,9 +83,9 @@ void Bomba::disegna() {
 				int ny= y + (direzioni[d][0] * i);
 				int nx= x + (direzioni[d][1] * i);
 
-				if(!punmappa->isempty(ny, nx)) break;
-
-				mvaddch(ny, nx, 'X');
+				if (punmappa->whatsthere(ny, nx) != '#') {
+                    			mvprintw(ny, nx, "%s", "█");
+                		}
 			}
 		}
 		attroff(COLOR_PAIR(1));
@@ -83,8 +102,6 @@ bool Bomba::colpisce(int testY, int testX) const {
         for (int i = 1; i <= raggio; i++) {
             int ny = y + (direzioni[d][0] * i);
             int nx = x + (direzioni[d][1] * i);
-
-            if (!punmappa->isempty(ny, nx)) break;
 
             if (testY == ny && testX == nx) return true;
         }
