@@ -8,9 +8,10 @@ Nemico::Nemico(int y, int x, Map* m, int t) : Entita(y, x, m, ' ') {
     this->vivo=1;
     this->tipo = t;
     this->frameCounter = 0;
-    if (tipo==1){ this->frameDelay = 3; this->simbolo = '$'; }
-    else if (tipo==2) { this->frameDelay = 5; this->simbolo = '#'; }
-    else if (tipo==3) { this->frameDelay = 6; this->simbolo = '&'; }
+    this->dirAttuale = rand() % 4;
+    if (tipo==1){ this->frameDelay = 9; this->simbolo = '$'; }
+    else if (tipo==2) { this->frameDelay = 12; this->simbolo = '#'; }
+    else if (tipo==3) { this->frameDelay = 15; this->simbolo = '&'; }
 }
 
 void Nemico::movimento(int pY, int pX, Bombe* pBombe) {
