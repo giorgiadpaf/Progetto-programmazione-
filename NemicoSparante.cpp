@@ -7,9 +7,9 @@ NemicoSparante::NemicoSparante(int y, int x, Map* m) : Nemico(y, x, m, 3){
     this->xp=-1;
     this->yp=-1;
 }
-int NemicoSparante::movimento(int pY, int pX, int dirCorrente){
+void NemicoSparante::movimento(int pY, int pX, Bombe* pBombe){
 
-    int nuovaDir = Nemico::movimento(pY, pX, dirCorrente); //AVEVO SBAGLIATO IL RICHIAMO
+    Nemico::movimento(pY, pX, pBombe);
 
     if (dirProiettile == -1) {
         if (pY < y && pX == x && punmappa->isempty(y - 1, x)) {
@@ -41,21 +41,17 @@ int NemicoSparante::movimento(int pY, int pX, int dirCorrente){
             else if (dirProiettile == 1) yp++; // Giu
             else if (dirProiettile == 2) xp--; // Sx
             else if (dirProiettile == 3) xp++;
-            if(!punmappa->isempty(yp, xp)) {
+            if(!punmappa->isempty(yp, xp) || (yp == pY && xp == pX)) {
                 dirProiettile=-1;
             }
         }
     }
-    return nuovaDir;
+    return;
 }
 
-int NemicoSparante::getYp() const {
-    return yp;
-}
+int NemicoSparante::getYp() const { return yp; }
 
-int NemicoSparante::getXp() const {
-    return xp;
-}
+int NemicoSparante::getXp() const { return xp; }
 
 void NemicoSparante::disegna(){
     Nemico::disegna();
