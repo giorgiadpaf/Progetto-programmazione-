@@ -14,7 +14,7 @@ protected:
 
 public:
     NemicoSparante(int y, int x, Map* m);
-    int movimento(int pY, int pX, int dirCorrente);
+    void movimento(int pY, int pX, Bombe* pBombe);
     void disegna();
     int getYp() const;
     int getXp() const;
