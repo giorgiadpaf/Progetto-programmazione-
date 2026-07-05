@@ -11,6 +11,7 @@ protected:
     int tipo;
     int frameDelay;
     int frameCounter;
+    int dirAttuale;
 
 public:
     Nemico(int y, int x, Map* m, int t);
