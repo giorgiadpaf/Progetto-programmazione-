@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MAP_HPP
+#define MAP_HPP
 #include <cstddef>
 #include <ncurses.h>
 #include <cstdlib>
@@ -48,3 +49,5 @@ public:
 
     void setTile(int y, int x, char c);//per eliminare i muri
 };
+
+#endif

@@ -11,7 +11,7 @@
 #include <fstream>
 #include <cstring>
 #include "Menu.hpp"
-
+#include "Tempo.hpp"
 //funzione che fa il parsing di un file e costruisce direttamente la lista di livelli
 // inserisce sia la lista di nemici sia il punto di spawn del giocatore e concatena tutte le mappe
 
@@ -118,6 +118,9 @@ int main() {
     Bombe gestoreBombe(mappa);
     Giocatore player(mappa->_xPspawn(), mappa->_yPspawn(), mappa, &gestoreBombe);
 
+    Tempo timerPartita(600);
+    timerPartita.start();
+
     bool running = true;
 
     while (running) {
@@ -166,6 +169,7 @@ int main() {
         }
         player.disegna();
         mvprintw(20, 0, "Vite: %d", player.getVite());
+	mvprintw(21, 0, "Tempo: %02d:%02d", timerPartita.getMinuti(), timerPartita.getSecondi());
 
         if (player.getVite() <= 0) {
             clear();
@@ -174,6 +178,15 @@ int main() {
             timeout(-1);
             refresh();
             getch(); 
+            running = false; 
+        }
+	else if (timerPartita.isScaduto()){
+	    clear();
+	    mvprintw(10, 15, "TEMPO SCADUTO!");
+            mvprintw(12, 12, "Inserire nome giocatore: ");//aggiugnere funzione punti/cl;assifica
+            timeout(-1);
+            refresh();
+            getch();
             running = false; 
         }
     }

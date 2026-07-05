@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BOMBA_HPP
+#define BOMBA_HPP
 #include "Map.hpp"
 #include "Entita.hpp"
 #include <ctime>
@@ -30,3 +31,5 @@ public:
     bool isInEsplosione() const;
     int getRaggio() const;
 };
+
+#endif

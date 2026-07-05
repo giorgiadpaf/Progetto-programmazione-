@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BOMBE_HPP
+#define BOMBE_HPP
 #include "Bomba.hpp"
 #include "Map.hpp"
 const int MAX_BOMBE = 3; //limite di bombe contemporanee a schermo
@@ -22,3 +23,5 @@ public:
 
     bool colpitaDaEsplosione(int testY, int testX);
 };
+
+#endif
