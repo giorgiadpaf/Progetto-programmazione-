@@ -13,23 +13,36 @@ Nemico::Nemico(int y, int x, Map* m, int t) : Entita(y, x, m, ' ') {
     else if (tipo==3) { this->frameDelay = 6; this->simbolo = '&'; }
 }
 
-int Nemico::movimento(int pY, int pX, int dirCorrente) {
+void Nemico::movimento(int pY, int pX, Bombe* pBombe) {
     frameCounter++;
-    if (frameCounter < frameDelay) return dirCorrente;
+    if (frameCounter < frameDelay) return;
     frameCounter = 0;
+
     int nextY = y;
     int nextX = x;
+
     if (tipo == 1) {
-        if (dirCorrente == 0) nextY--;
-        else if (dirCorrente == 1) nextY++;
-        else if (dirCorrente == 2) nextX--;
-        else if (dirCorrente == 3) nextX++;
+        if (dirAttuale == 0) nextY--;     
+        else if (dirAttuale == 1) nextY++; 
+        else if (dirAttuale == 2) nextX--; 
+        else if (dirAttuale == 3) nextX++; 
+        if (!punmappa->isempty(nextY, nextX) || (rand() %  20 == 0)) {
+            dirAttuale = rand() % 4;
+            return; 
+        }
+    } else if (tipo == 2 || tipo == 3) {
+        if (pX > x && punmappa->isempty(y, x + 1)) nextX++;
+        else if (pX < x && punmappa->isempty(y, x - 1)) nextX--;
+        else if (pY > y && punmappa->isempty(y + 1, x)) nextY++;
+        else if (pY < y && punmappa->isempty(y - 1, x)) nextY--;
     }
-    if (punmappa->isempty(nextY, nextX)) {
-        y = nextY;
-        x = nextX;
+    if(pBombe->cEunaBomba(nextY, nextX)) {
+        dirAttuale = rand() % 4;
+        return;
     }
-    return dirCorrente;
+    y = nextY;
+    x = nextX;
+    return;
 }
 
 void Nemico::disegna() {
