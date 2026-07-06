@@ -12,6 +12,7 @@ protected:
     bool inEsplosione;       // true se esplosa
     time_t tempoEsplosione;  // quando inizia animazione esplosione
     int raggioEffettivo[4];
+    Giocatore* player;
 
 public:
     Bomba(Map* mappa = nullptr);
