@@ -12,6 +12,10 @@ Bombe::Bombe(Map* mappa) {
     }
 }
 
+void Bombe::raccogliItem(int durata) {
+    potenziamento.raccogli(durata);
+}
+
 void Bombe::aggiungiBomba(int y, int x, Giocatore* player) {
     //cerca e pizza bomba
     for (int i = 0; i < MAX_BOMBE; i++) {
@@ -35,6 +39,13 @@ bool Bombe::cEunaBomba(int y, int x) {
 
 void Bombe::aggiornaEStampa() {
     //conto alla rovescia ed esplosione bomba
+    potenziamento.aggiorna();
+
+    if(potenziamento.isAttivo()) {
+	    raggioAttuale = 3;
+    } else {
+	    raggioAttuale = 1;
+    }
     for (int i = 0; i < MAX_BOMBE; i++) {
         if (inventario[i].isAttiva()) {
             inventario[i].aggiorna(); //controlla il tempo

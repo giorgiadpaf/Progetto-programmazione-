@@ -31,3 +31,7 @@ int Tempo::getMinuti() const {
 int Tempo::getSecondi() const {
     return getTempoRimasto() % 60;
 }
+
+void Tempo::aggiungiTempo(int secondi) {
+    durataMaxSecondi += secondi;
+}

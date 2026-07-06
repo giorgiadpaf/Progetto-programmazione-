@@ -53,7 +53,14 @@ void Nemico::disegna() {
 
 void Nemico::controllaMorte(Bombe* pBombe, Giocatore* player) {
     if (this->vivo == 1 && pBombe->colpitaDaEsplosione(y, x)) {
-        this->vivo=0;
+	if (rand() % 100 < 20) { //percentuale di spawn item quando muore il nemico
+		if(rand() % 2 == 0) {
+			punmappa->setTile(y, x, '^');//item raggio
+		} else {
+			punmappa->setTile(y, x, '&');//item tempo
+		}
+        }
+	this->vivo=0;
         this->y = -1;
         this->x = -1;
         if (tipo==1){ player->aggiungiPunteggio(100); }

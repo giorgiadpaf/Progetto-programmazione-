@@ -162,7 +162,9 @@ int main() {
     timeout(50);
     srand(time(NULL));
     start_color();
-    init_pair(1, COLOR_RED, COLOR_BLACK);
+    init_pair(1, COLOR_RED, COLOR_BLACK); //colore esplosione bomba
+    init_pair(2, COLOR_YELLOW, COLOR_BLACK); //colore item raggio
+    init_pair(3, COLOR_GREEN, COLOR_BLACK); //colore item tempo
 
     Menu menu;
     bool avviaGioco = false;
@@ -213,7 +215,18 @@ int main() {
 
         player.muovi(c);
 
-        if (mappa->isonN(player)) {
+	//controlla se il giocatore calpersta item
+  	char tileSottoPlayer = mappa->whatsthere(player.getY(), player.getX());
+	if (tileSottoPlayer == '^') {
+		gestoreBombe.raccogliItem(10);
+		mappa->setTile(player.getY(), player.getX(), '.');
+	}
+	else if (tileSottoPlayer == '&') {
+		timerPartita.aggiungiTempo(30); //aggiunge 30 secondi 
+		mappa->setTile(player.getY(), player.getX(), '.');
+	}
+
+        if (mappa->isonN(player)) { 
             Map* prossima = mappa->nextlvl();
             if (prossima != NULL) {
                 mappa->setPspawn(player.getX()-1,player.getY());

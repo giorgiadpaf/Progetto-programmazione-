@@ -2,7 +2,7 @@
 CXX = g++
 LDFLAGS = -lncursesw
 # Elenchi qui tutti i file oggetto che ti servono, se create altri file aggiungete alla lista NOMEFILE.o
-OBJS = Entita.o Giocatore.o main_test.o  Nemico.o NemicoSparante.o Map.o Bomba.o Bombe.o Menu.o Tempo.o
+OBJS = Entita.o Giocatore.o main_test.o  Nemico.o NemicoSparante.o Map.o Bomba.o Bombe.o Menu.o Tempo.o Item.o
 
 bomberman: $(OBJS)
 	$(CXX) $(OBJS) -o bomberman $(LDFLAGS)

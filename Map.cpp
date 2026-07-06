@@ -19,6 +19,36 @@ Map::Map(Map* prec_, Map* next_,char logicmap_ [][81], int xPspawn_, int yPspawn
             logicmap[i][k] = logicmap_[i][k];
         }
     }
+
+    int contaMuri = 0;
+    int muriY[800] ,muriX[800]; //array per coordintae muri
+
+    //cerca le coordinate dei muri '*'
+    for(int i = 0; i < 20; i++){
+        for(int k = 0; k < 40; k++){
+            if(logicmap[i][k] == '*'){
+                muriY[contaMuri] = i;
+                muriX[contaMuri] = k;
+                contaMuri++;
+            }
+        }
+    }
+
+    // scelta casuale di due muri con item
+    int itemDaPiazzare = 2;
+    while(itemDaPiazzare > 0 && contaMuri > 0){
+        int indiceRandom = rand() % contaMuri; //scelta casuale
+        int y = muriY[indiceRandom];
+        int x = muriX[indiceRandom];
+        
+        logicmap[y][x] = '$'; // '$' muro con item
+        
+        //leva il muro scelto dalla lista per non sceglierlo due volte
+        muriY[indiceRandom] = muriY[contaMuri - 1];
+        muriX[indiceRandom] = muriX[contaMuri - 1];
+        contaMuri--;
+        itemDaPiazzare--;
+    }
 }
 
 void Map::setPspawn(int y, int x){xPspawn = x; yPspawn = y;}
@@ -39,10 +69,20 @@ void Map::printonscr() {
             }else if (cell == '#') {
                 mvwprintw(window, row, col, "%s", "█");
             }
-            else if (cell == '*' || cell == 'p' || cell == 'n') {
+            else if (cell == '*' || cell == '$' || cell == 'p' || cell == 'n') {
                 mvwprintw(window, row, col, "%s", "▒");
             }
-            else {
+	    else if (cell == '^') {
+		    attron(COLOR_PAIR(2));
+		    mvwprintw(window, row, col, "%s", "?"); //item: aumento raggio
+		    attroff(COLOR_PAIR(2));
+	    }
+	    else if (cell == '&') {
+		    attron(COLOR_PAIR(3));
+		    mvwprintw(window, row, col, "%s", "+");//item: tempo extra
+		    attroff(COLOR_PAIR(3));
+	    } 
+	    else {
                 mvwprintw(window, row, col, "%c", ' ');
             }
         }
@@ -51,7 +91,8 @@ void Map::printonscr() {
     wrefresh(window);
 }
 bool Map::isempty(int y, int x){
-    return logicmap[y][x] == 'N' ||logicmap[y][x] == 'P' || logicmap[y][x] == '.';
+    return logicmap[y][x] == 'N' ||logicmap[y][x] == 'P' || logicmap[y][x] == '.' || 
+	    logicmap[y][x] == '^' || logicmap[y][x] == '&';
 }
 
 void Map::addmapinq(Map* newmap){

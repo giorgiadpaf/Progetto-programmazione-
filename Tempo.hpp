@@ -23,6 +23,8 @@ public:
     //funzioni per minutio e secondi
     int getMinuti() const;
     int getSecondi() const;
+
+    void aggiungiTempo(int secondi);
 };
 
 #endif

@@ -21,9 +21,9 @@ int Menu::opzione() {
 	mvprintw(8, center, "%s", titolo);
 
 	//stampo le opzioni
-	mvprintw(15, center+3, "%s", opt0);
-	mvprintw(16, center+3, "%s", opt1);
-	mvprintw(17, center+3, "%s", opt2);
+	mvprintw(15, center+1, "%s", opt0);
+	mvprintw(16, center+1, "%s", opt1);
+	mvprintw(17, center+1, "%s", opt2);
 
 	refresh();
         

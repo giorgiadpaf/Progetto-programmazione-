@@ -53,24 +53,33 @@ void Bomba::aggiorna() {
 
 		    raggioEffettivo[d] = i;
 
-		    if(tile == '*'){
-			    punmappa->setTile(ny, nx, '.');
-				if (player != NULL) {
-            		player->aggiungiPunteggio(10);
-        		}
-			    break;
-			}
-
-			if(tile == 'p' || tile == 'n'){
-			    punmappa->setTile(ny, nx, tile-32);
-				if (player != NULL) {
-            		player->aggiungiPunteggio(10);
-        		}
+		    if(tile == '*' || tile == '$'){
+			    if (tile == '$') {
+				    if(rand() % 2 == 0) {
+				    	punmappa->setTile(ny, nx, '^');
+				    } else {
+					punmappa->setTile(ny, nx, '&');
+				    }
+			    } else {
+				    punmappa->setTile(ny, nx, '.');
+			    }
+			    
+			    if (player != NULL) {
+            			    player->aggiungiPunteggio(10); 
+        		    }
 			    break;
 		    }
+
+		    if (tile == 'p' || tile == 'n') {
+			    punmappa->setTile(ny, nx, tile-32);
+			    if(player != NULL) {
+				    player->aggiungiPunteggio(10);
+			    }
+			    break;
 		}
 	     }
 	    }
+	}
     } else {
         //esplosione visibile a schermo per 1 secondo
         if (difftime(time(NULL), tempoEsplosione) >= 1) {
@@ -91,13 +100,12 @@ void Bomba::disegna() {
 		int direzioni[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
 		for(int d=0; d < 4; d++) {
-			for(int i=1; i<=raggio; i++) {
+			for(int i=1; i<=raggioEffettivo[d]; i++) {
 				int ny= y + (direzioni[d][0] * i);
 				int nx= x + (direzioni[d][1] * i);
 
-				if (punmappa->whatsthere(ny, nx) != '#') {
-                    			mvprintw(ny, nx, "%s", "█");
-                		}
+                    		mvprintw(ny, nx, "%s", "█");
+                		
 			}
 		}
 		attroff(COLOR_PAIR(1));
@@ -111,7 +119,7 @@ bool Bomba::colpisce(int testY, int testX) const {
 
 	int direzioni[4][2] ={{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     for (int d = 0; d < 4; d++) {
-        for (int i = 1; i <= raggio; i++) {
+        for (int i = 1; i <= raggioEffettivo[d]; i++) {
             int ny = y + (direzioni[d][0] * i);
             int nx = x + (direzioni[d][1] * i);
 
