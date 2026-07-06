@@ -3,7 +3,7 @@
 
 struct Record {
     char nome[50];
-    int punteggio;
+    int punti;
 };
 
 class Classifica {
