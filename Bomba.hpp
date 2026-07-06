@@ -4,6 +4,8 @@
 #include "Entita.hpp"
 #include <ctime>
 
+class Giocatore;
+
 class Bomba : public Entita {
 protected:
     time_t tempoPiazzamento; // quando piazzata a terra
