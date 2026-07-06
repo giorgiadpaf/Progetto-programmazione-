@@ -1,5 +1,6 @@
 #include "Bomba.hpp"
 #include "Map.hpp"
+#include "Giocatore.hpp"
 #include <ctime>
 #include <ncurses.h>
 
