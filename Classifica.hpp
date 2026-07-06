@@ -9,7 +9,7 @@ struct Record {
 class Classifica {
 public:
     void salvaPunteggio(char* nome, int punti);
-    void visualizzaTopN(int n);
+    void visualizzaTopN();
 };
 
 #endif
