@@ -12,11 +12,11 @@ Bombe::Bombe(Map* mappa) {
     }
 }
 
-void Bombe::aggiungiBomba(int y, int x) {
+void Bombe::aggiungiBomba(int y, int x, Giocatore* player) {
     //cerca e pizza bomba
     for (int i = 0; i < MAX_BOMBE; i++) {
         if (!inventario[i].isAttiva()) {
-            inventario[i].piazza(y, x, raggioAttuale);
+            inventario[i].piazza(y, x, raggioAttuale, player);
             break; //esce quando ne trova una disponibile
         }
     }
