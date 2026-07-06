@@ -20,7 +20,7 @@ public:
     Bomba(Map* mappa = nullptr);
 
     //,etodi di azione
-    void piazza(int startY, int startX, int raggioBomba);
+    void piazza(int startY, int startX, int raggioBomba, Giocatore* Pgiocatore);
     void aggiorna();
     void disattiva();
 
