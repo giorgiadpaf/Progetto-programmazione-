@@ -170,7 +170,8 @@ int main() {
         }
         player.disegna();
         mvprintw(20, 0, "Vite: %d", player.getVite());
-	mvprintw(21, 0, "Tempo: %02d:%02d", timerPartita.getMinuti(), timerPartita.getSecondi());
+		mvprintw(21, 0, "Tempo: %02d:%02d", timerPartita.getMinuti(), timerPartita.getSecondi());
+		mvprintw(22, 0, "Punteggio: %d", player.getPunteggio());
 
         if (player.getVite() <= 0) {
             clear();
