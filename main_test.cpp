@@ -57,6 +57,8 @@ void victory(WINDOW* win) {
 }
 
 void lost(WINDOW* win, Giocatore* player) {
+	flushinp();      
+    timeout(-1);   
     clear();
     box(win, 0, 0);
     int max_y, max_x;
