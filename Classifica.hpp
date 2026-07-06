@@ -10,10 +10,7 @@ struct Record {
 
 class Classifica {
 public:
-    // Scrive un nuovo punteggio in fondo al file
-    void salvaPunteggio(const char* nome, int punti);
-
-    // Legge, ordina e mostra i migliori N giocatori
+    void salvaPunteggio(char* nome, int punti);
     void visualizzaTopN(int n);
 };
 
