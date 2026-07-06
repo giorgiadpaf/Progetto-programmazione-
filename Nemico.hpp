@@ -2,6 +2,7 @@
 #include "Entita.hpp"
 #include <ncurses.h>
 
+class Giocatore;
 class Map;
 class Bombe;
 
