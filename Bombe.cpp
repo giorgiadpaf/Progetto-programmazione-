@@ -1,5 +1,7 @@
 #include "Bombe.hpp"
 #include "Map.hpp"
+#include "Giocatore.hpp"
+
 
 Bombe::Bombe(Map* mappa) {
     raggioAttuale = 1; //raggio iniziale standard
