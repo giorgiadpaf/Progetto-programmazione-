@@ -50,11 +50,14 @@ void Nemico::disegna() {
     mvaddch(y, x, simbolo);
 }
 
-void Nemico::controllaMorte(Bombe* pBombe) {
+void Nemico::controllaMorte(Bombe* pBombe, Giocatore* player) {
     if (this->vivo == 1 && pBombe->colpitaDaEsplosione(y, x)) {
         this->vivo=0;
         this->y = -1;
         this->x = -1;
+        if (tipo==1){ player->aggiungiPunteggio(100); }
+        else if (tipo==2) { player->aggiungiPunteggio(115); }
+        else if (tipo==3) { player->aggiungiPunteggio(130); }
     }
 }
 
