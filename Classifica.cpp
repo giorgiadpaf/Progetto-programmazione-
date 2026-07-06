@@ -40,27 +40,74 @@ void Classifica::salvaPunteggio(char* nome, int punti) {
     }
 }
 
-void Classifica::visualizzaTopN(int n) {
+void Classifica::visualizzaTopN() {
+    timeout(-1);
+    flushinp();
+    clear();
+    int max_y, max_x;
+    getmaxyx(stdscr, max_y, max_x);
+    box(stdscr, 0, 0);
+
+    const char* titolo_n = "IMPOSTAZIONI CLASSIFICA";
+    const char* prompt_n = "Quanti campioni vuoi visualizzare?";
+
+    mvprintw(max_y / 2 - 4, (max_x - strlen(titolo_n)) / 2, "%s", titolo_n);
+    mvprintw(max_y / 2 - 2, (max_x - strlen(prompt_n)) / 2, "%s", prompt_n);
+    echo();
+    curs_set(1);
+
+    int n_scelto = 0;
+    move(max_y / 2, max_x / 2 - 2);
+    scanw("%d", &n_scelto);
+    noecho();
+    curs_set(0);
+    if (n_scelto <= 0) n_scelto = 5;
+    if (n_scelto > 100) n_scelto = 100;
+    clear();
+    box(stdscr, 0, 0);
+
+    const char* scritta_arcade[6] = {
+        "████████╗ ██████╗ ██████╗     ██████╗ ██╗      █████╗ ██╗   ██╗███████╗██████╗ ███████╗",
+        "╚══██╔══╝██╔═══██╗██╔══██╗    ██╔══██╗██║     ██╔══██╗╚██╗ ██╔╝██╔════╝██╔══██╗██╔════╝",
+        "   ██║   ██║   ██║██████╔╝    ██████╔╝██║     ███████║ ╚████╔╝ █████╗  ██████╔╝███████╗",
+        "   ██║   ██║   ██║██╔═══╝     ██╔═══╝ ██║     ██╔══██║  ╚██╔╝  ██╔══╝  ██╔══██╗╚════██║",
+        "   ██║   ╚██████╔╝██║         ██║     ███████╗██║  ██║   ██║   ███████╗██║  ██║███████║",
+        "   ╚═╝    ╚═════╝ ╚═╝         ╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝"
+    };
+
+    int start_y = 3;
+    int start_x = (max_x - 90) / 2;
+
+    if (max_x >= 90) {
+        for (int i = 0; i < 6; i++) {
+            mvprintw(start_y + i, start_x, "%s", scritta_arcade[i]);
+        }
+        start_y += 8;
+    } else {
+        mvprintw(start_y, (max_x - 12) / 2, "=== TOP PLAYERS ===");
+        start_y += 3;
+    }
+
     ifstream file;
     file.open("classifica.txt");
-
-    clear();
-    char titolo[] = "=== TOP PLAYERS ===";
-    mvprintw(LINES / 4, (COLS - strlen(titolo)) / 2, "%s", titolo);
     if (file.is_open()) {
         char nomeLetto[50];
         int puntiLetti;
         int riga = 0;
-        while (riga < n && file >> nomeLetto >> puntiLetti) {
-            mvprintw(LINES / 4 + 3 + riga, (COLS - 20) / 2, "%d. %s : %d", riga + 1, nomeLetto, puntiLetti);
+        char nomeTroncato[21];
+        while (riga < n_scelto && file >> nomeLetto >> puntiLetti) {
+            strncpy(nomeTroncato, nomeLetto, 20);
+            nomeTroncato[20] = '\0';
+            char rigaTesto[100];
+            sprintf(rigaTesto, "%2d. %-20s  %6d", riga + 1, nomeTroncato, puntiLetti);
+            int x_centrata = (max_x - strlen(rigaTesto)) / 2;
+            mvprintw(start_y + riga, x_centrata, "%s", rigaTesto);
             riga++;
         }
         file.close();
         if (riga == 0) {
-            mvprintw(LINES / 2, (COLS - 22) / 2, "Nessun record trovato.");
+            mvprintw(max_y / 2, (max_x - 22) / 2, "NESSUN RECORD PRESENTE");
         }
-    } else {
-        mvprintw(LINES / 2, (COLS - 25) / 2, "Impossibile aprire il file.");
     }
 
     char msgEsci[] = "Premi un tasto per tornare al menu...";
