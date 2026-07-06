@@ -1,8 +1,6 @@
 #ifndef CLASSIFICA_HPP
 #define CLASSIFICA_HPP
 
-#include <fstream>
-
 struct Record {
     char nome[50];
     int punteggio;
