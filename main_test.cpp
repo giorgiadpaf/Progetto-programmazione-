@@ -153,7 +153,7 @@ int main() {
         enemylist* tmp = elist;
         while (tmp != NULL) {
 		   if (tmp->enemy->isVivo()) tmp->enemy->movimento(player.getY(), player.getX(), &gestoreBombe);
-           tmp->enemy->controllaMorte(&gestoreBombe);
+           tmp->enemy->controllaMorte(&gestoreBombe, &player);
            tmp = tmp->next;
         }
         player.controllaDanni(elist);
