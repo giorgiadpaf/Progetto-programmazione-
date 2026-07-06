@@ -2,6 +2,8 @@
 #define BOMBE_HPP
 #include "Bomba.hpp"
 #include "Map.hpp"
+class Giocatore;
+
 const int MAX_BOMBE = 3; //limite di bombe contemporanee a schermo
 
 class Bombe {
@@ -13,7 +15,7 @@ public:
     Bombe(Map* mappa);
 
     //metodi riprendi da file 'Giocatore'
-    void aggiungiBomba(int y, int x);
+    void aggiungiBomba(int y, int x, Giocatore* player);
     bool cEunaBomba(int y, int x);
 
     void aggiornaEStampa();
