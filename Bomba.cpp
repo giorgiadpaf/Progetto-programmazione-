@@ -12,7 +12,7 @@ Bomba::Bomba(Map* mappa) : Entita(0, 0, mappa, 'O') {
     for(int i = 0; i < 4; i++) raggioEffettivo[i] = 0;
 }
 
-void Bomba::piazza(int startY, int startX, int raggioBomba) {
+void Bomba::piazza(int startY, int startX, int raggioBomba, Giocatore* Pgiocatore) {
     y = startY;
     x = startX;
     raggio = raggioBomba;
@@ -20,7 +20,7 @@ void Bomba::piazza(int startY, int startX, int raggioBomba) {
     attiva = true;
     inEsplosione = false;
     simbolo = 'O';
-
+	player = Pgiocatore;
     for(int i = 0; i < 4; i++) {
         raggioEffettivo[i] = 0;
     }
@@ -55,6 +55,9 @@ void Bomba::aggiorna() {
 
 		    if(tile == '*'){
 			    punmappa->setTile(ny, nx, '.');
+				if (player != NULL) {
+            		player->aggiungiPunti(10); 
+        		}
 			    break;
 		    }
 		}
