@@ -33,7 +33,7 @@ void Giocatore::muovi(int input){
     }
 
     if (input == ' ') {
-        pBombe->aggiungiBomba(y, x);
+        pBombe->aggiungiBomba(y, x, this);
     }
 }
 
