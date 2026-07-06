@@ -1,6 +1,7 @@
 #include "Nemico.hpp"
 #include "Bombe.hpp"
 #include "Map.hpp"
+#include "Giocatore.hpp"
 #include <cstdlib>
 #include <ctime>
 
