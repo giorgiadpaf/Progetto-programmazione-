@@ -7,6 +7,7 @@
 #include "Nemico.hpp"
 #include "NemicoSparante.hpp"
 #include "Giocatore.hpp"
+#include "Classifica.hpp"
 #include "Bombe.hpp"
 #include <fstream>
 #include <cstring>
@@ -55,7 +56,7 @@ void victory(WINDOW* win) {
     getch();     // Cattura il tasto per poi chiudere
 }
 
-void lost(WINDOW* win) {
+void lost(WINDOW* win, Giocatore* player) {
     clear();
     box(win, 0, 0);
     int max_y, max_x;
