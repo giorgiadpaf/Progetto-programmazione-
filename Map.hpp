@@ -16,7 +16,7 @@ private:
     WINDOW* window;
     Map* prec;
     Map* next;
-    char logicmap[20][41];
+    char logicmap[20][81];
     int xPspawn;
     int yPspawn;
     int xD;
@@ -24,9 +24,10 @@ private:
     enemylist* enemyL;
 
 public:
-    Map(Map* prec_ = NULL, Map* next_ = NULL, char logicmap_ [][41] = NULL, int xPspawn_ = 0, int yPspawn_ = 0, WINDOW* window_ = NULL, enemylist* enemyL_ = NULL);
+    Map(Map* prec_ = NULL, Map* next_ = NULL, char logicmap_ [][81] = NULL, int xPspawn_ = 0, int yPspawn_ = 0, WINDOW* window_ = NULL, enemylist* enemyL_ = NULL);
 
-    char whatsthere(int x, int y); //Ritorna il carattere presente nella logicmap della mappa nel punto (x,y)
+    void setPspawn(int y, int x);
+    char whatsthere(int y, int x); //Ritorna il carattere presente nella logicmap della mappa nel punto (x,y)
 
     enemylist* _enemylist(); //ritorna un puntatore alla enemylist della mappa
     int _xPspawn();

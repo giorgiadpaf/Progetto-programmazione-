@@ -56,7 +56,15 @@ void Bomba::aggiorna() {
 		    if(tile == '*'){
 			    punmappa->setTile(ny, nx, '.');
 				if (player != NULL) {
-            		player->aggiungiPunteggio(10); 
+            		player->aggiungiPunteggio(10);
+        		}
+			    break;
+			}
+
+			if(tile == 'p' || tile == 'n'){
+			    punmappa->setTile(ny, nx, tile-32);
+				if (player != NULL) {
+            		player->aggiungiPunteggio(10);
         		}
 			    break;
 		    }

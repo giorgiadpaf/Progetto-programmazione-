@@ -5,7 +5,7 @@
 #include "Nemico.hpp"
 using namespace std;
 
-Map::Map(Map* prec_, Map* next_,char logicmap_ [][41], int xPspawn_, int yPspawn_, WINDOW* window_, enemylist* enemyL_){
+Map::Map(Map* prec_, Map* next_,char logicmap_ [][81], int xPspawn_, int yPspawn_, WINDOW* window_, enemylist* enemyL_){
     enemyL = enemyL_;
     window = window_;
     prec = prec_;
@@ -15,12 +15,13 @@ Map::Map(Map* prec_, Map* next_,char logicmap_ [][41], int xPspawn_, int yPspawn
     yPspawn = yPspawn_;
 
     for(int i = 0; i < 20; i++){
-        for(int k = 0; k <= 40; k++){
+        for(int k = 0; k <= 80; k++){
             logicmap[i][k] = logicmap_[i][k];
         }
     }
 }
 
+void Map::setPspawn(int y, int x){xPspawn = x; yPspawn = y;}
 char Map::whatsthere(int y,int x){return logicmap[y][x];}
 int Map::_xPspawn(){return xPspawn;}
 int Map::_yPspawn(){return yPspawn;}
@@ -30,7 +31,7 @@ void Map::printonscr() {
     if (logicmap == NULL) return;
 
     for (int row = 0; row < 20; row++) {
-        for (int col = 0; col < 40; col++) {
+        for (int col = 0; col < 80; col++) {
 
             char cell = logicmap[row][col];
             if(cell == 'N' || cell == 'P'){
@@ -38,7 +39,7 @@ void Map::printonscr() {
             }else if (cell == '#') {
                 mvwprintw(window, row, col, "%s", "█");
             }
-            else if (cell == '*') {
+            else if (cell == '*' || cell == 'p' || cell == 'n') {
                 mvwprintw(window, row, col, "%s", "▒");
             }
             else {

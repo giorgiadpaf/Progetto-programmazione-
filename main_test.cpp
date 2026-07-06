@@ -12,9 +12,90 @@
 #include <cstring>
 #include "Menu.hpp"
 #include "Tempo.hpp"
+
+void victory(WINDOW* win) {
+    clear();
+    box(win, 0, 0);
+    int max_y, max_x;
+    getmaxyx(win, max_y, max_x);
+
+    const char* scritta[6] = {
+        "██╗   ██╗██╗████████╗████████╗██████╗ ██████╗ ██╗ █████╗ ",
+        "██║   ██║██║╚══██╔══╝╚══██╔══╝██╔══██╗██╔══██╗██║██╔══██╗",
+        "██║   ██║██║   ██║      ██║   ██║  ██║██████╔╝██║███████║",
+        "╚██╗ ██╔╝██║   ██║      ██║   ██║  ██║██╔══██╗██║██╔══██║",
+        " ╚████╔╝ ██║   ██║      ██║   ██████╔╝██║  ██║██║██║  ██║",
+        "  ╚═══╝  ╚═╝   ╚═╝      ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝"
+    };
+
+    int larghezza_scritta = 57;
+    int altezza_scritta = 6;
+    int altezza_totale = 11;
+
+    int start_y = (max_y - altezza_totale) / 2;
+    int start_x_scritta = (max_x - larghezza_scritta) / 2;
+
+    for (int i = 0; i < altezza_scritta; i++) {
+        mvwprintw(win, start_y + i, start_x_scritta, "%s", scritta[i]);
+    }
+    //possibilmente stampare anche  il punteggio a schermo
+    const char* msg1 = "HAI COMPLETATO TUTTI I LIVELLI!";
+    const char* msg2 = "Premi un tasto per uscire...";
+    const char* msg3 = "Inserisci il tuo nome per aggiornare la classifica: ";
+    int start_x_msg1 = (max_x - strlen(msg1)) / 2;
+    int start_x_msg2 = (max_x - strlen(msg2)) / 2;
+    int start_x_msg3 = (max_x - strlen(msg3)) / 2;
+
+    mvwprintw(win, start_y + altezza_scritta + 2, start_x_msg1, "%s", msg1);
+    mvwprintw(win, start_y + altezza_scritta + 4, start_x_msg2, "%s", msg2);
+    mvwprintw(win, start_y + altezza_scritta + 6, start_x_msg3, "%s", msg3);
+    wrefresh(win);
+
+    timeout(-1); // Ferma l'esecuzione all'infinito in attesa di input
+    getch();     // Cattura il tasto per poi chiudere
+}
+
+void lost(WINDOW* win) {
+    clear();
+    box(win, 0, 0);
+    int max_y, max_x;
+    getmaxyx(win, max_y, max_x);
+
+    const char* scritta[6] = {
+        "██╗  ██╗ █████╗ ██╗    ██████╗ ███████╗██████╗ ███████╗ ██████╗ ",
+        "██║  ██║██╔══██╗██║    ██╔══██╗██╔════╝██╔══██╗██╔════╝██╔═══██╗",
+        "███████║███████║██║    ██████╔╝█████╗  ██████╔╝███████╗██║   ██║",
+        "██╔══██║██╔══██║██║    ██╔═══╝ ██╔══╝  ██╔══██╗╚════██║██║   ██║",
+        "██║  ██║██║  ██║██║    ██║     ███████╗██║  ██║███████║╚██████╔╝",
+        "╚═╝  ╚═╝╚═╝  ╚═╝╚═╝    ╚═╝     ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝ "
+    };
+
+    int larghezza_scritta = 64;
+    int altezza_scritta = 6;
+    int altezza_totale = 11;
+
+    int start_y = (max_y - altezza_totale) / 2;
+    int start_x_scritta = (max_x - larghezza_scritta) / 2;
+
+    for (int i = 0; i < altezza_scritta; i++) {
+        mvwprintw(win, start_y + i, start_x_scritta, "%s", scritta[i]);
+    }
+    const char* msg1 = "HAI TERMINATO LE VITE A DISPOSIZIONE :(";
+    const char* msg2 = "Premi un tasto per uscire...";
+    int start_x_msg1 = (max_x - strlen(msg1)) / 2;
+    int start_x_msg2 = (max_x - strlen(msg2)) / 2;
+
+    mvwprintw(win, start_y + altezza_scritta + 2, start_x_msg1, "%s", msg1);
+    mvwprintw(win, start_y + altezza_scritta + 4, start_x_msg2, "%s", msg2);
+    wrefresh(win);
+
+    timeout(-1); // Ferma l'esecuzione all'infinito in attesa di input
+    getch();     // Cattura il tasto per poi chiudere
+}
+
+
 //funzione che fa il parsing di un file e costruisce direttamente la lista di livelli
 // inserisce sia la lista di nemici sia il punto di spawn del giocatore e concatena tutte le mappe
-
 Map* loadMapsFromFile(const char* fileName, WINDOW* win) {
     std::ifstream file(fileName);
     if (!file.is_open()) {
@@ -23,18 +104,18 @@ Map* loadMapsFromFile(const char* fileName, WINDOW* win) {
 
     Map* head = NULL;
     Map* currentMap = NULL;
-    char word[256];
+    char word[1700];
 
     while (file >> word) {
         if (strcmp(word, "MAPPA") == 0) {
-            char newLogic[20][41];
+            char newLogic[20][81];
 
             for (int i = 0; i < 20; i++) {
                 file >> word;
-                for (int k = 0; k < 40; k++) {
+                for (int k = 0; k < 80; k++) {
                     newLogic[i][k] = word[k];
                 }
-                newLogic[i][40] = '\0';
+                newLogic[i][80] = '\0';
             }
 
             int spawnX = 0, spawnY = 0;
@@ -116,11 +197,12 @@ int main() {
     }
 
     Bombe gestoreBombe(mappa);
-    Giocatore player(mappa->_xPspawn(), mappa->_yPspawn(), mappa, &gestoreBombe);
+    Giocatore player(mappa->_yPspawn(), mappa->_xPspawn(), mappa, &gestoreBombe);
 
     Tempo timerPartita(600);
     timerPartita.start();
 
+    bool won = false;
     bool running = true;
 
     while (running) {
@@ -131,16 +213,17 @@ int main() {
 
         player.muovi(c);
 
-        if (mappa->isonN(player)) { 
+        if (mappa->isonN(player)) {
             Map* prossima = mappa->nextlvl();
             if (prossima != NULL) {
+                mappa->setPspawn(player.getX()-1,player.getY());
                 mappa = prossima;
-                gestoreBombe = Bombe(mappa); 
+                gestoreBombe = Bombe(mappa);
                 player.cambiaLivello(mappa, mappa->_xPspawn(), mappa->_yPspawn());
-                elist = mappa->_enemylist(); 
-            }
-        }
-        else if (mappa->isonP(player)) { 
+                elist = mappa->_enemylist();
+            }else{won = true;}
+
+        }else if (mappa->isonP(player)) {
             Map* precedente = mappa->preclvl();
             if (precedente != NULL) {
                 mappa = precedente;
@@ -175,22 +258,23 @@ int main() {
 
         if (player.getVite() <= 0) {
             clear();
-            mvprintw(10, 15, "GAME OVER - Hai perso tutte le vite");
-            mvprintw(12, 12, "Premi un tasto per chiudere il gioco...");
-            timeout(-1);
-            refresh();
-            getch(); 
-            running = false; 
+            lost(stdscr);
+            running = false;
         }
-	else if (timerPartita.isScaduto()){
-	    clear();
-	    mvprintw(10, 15, "TEMPO SCADUTO!");
+        else if (timerPartita.isScaduto()){
+    	    clear();
+    	    mvprintw(10, 15, "TEMPO SCADUTO!");
             mvprintw(12, 12, "Inserire nome giocatore: ");//aggiugnere funzione punti/cl;assifica
             timeout(-1);
             refresh();
             getch();
-            running = false; 
+            running = false;
+        }else if(won == true){
+       	    clear();
+            victory(stdscr);
+            running = false;
         }
+
     }
 
     endwin();
