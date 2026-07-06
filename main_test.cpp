@@ -80,17 +80,27 @@ void lost(WINDOW* win) {
     for (int i = 0; i < altezza_scritta; i++) {
         mvwprintw(win, start_y + i, start_x_scritta, "%s", scritta[i]);
     }
-    const char* msg1 = "HAI TERMINATO LE VITE A DISPOSIZIONE :(";
-    const char* msg2 = "Premi un tasto per uscire...";
+	const char* msg1;
+    if(player->getVite() <= 0) msg1 = "HAI TERMINATO LE VITE A DISPOSIZIONE :(";
+    else msg1 = "HAI TERMINATO IL TEMPO A DISPOSIZIONE :(";
     int start_x_msg1 = (max_x - strlen(msg1)) / 2;
-    int start_x_msg2 = (max_x - strlen(msg2)) / 2;
-
     mvwprintw(win, start_y + altezza_scritta + 2, start_x_msg1, "%s", msg1);
-    mvwprintw(win, start_y + altezza_scritta + 4, start_x_msg2, "%s", msg2);
+    char prompt[50];
+    sprintf(prompt, "PUNTEGGIO FINALE: %d", player->getPunteggio());
+    mvwprintw(win, start_y + altezza_scritta + 4, (max_x - strlen(prompt)) / 2, "%s", prompt);
+    const char* chiedi_nome = "Inserisci il tuo nome per la classifica:";
+    mvwprintw(win, start_y + altezza_scritta + 6, (max_x - strlen(chiedi_nome)) / 2, "%s", chiedi_nome);
     wrefresh(win);
-
-    timeout(-1); // Ferma l'esecuzione all'infinito in attesa di input
-    getch();     // Cattura il tasto per poi chiudere
+    char nomeUtente[50];
+    echo();             
+    curs_set(1);       
+    wmove(win, start_y + altezza_scritta + 9, (max_x / 2) - 10);
+    wgetnstr(win, nomeUtente, 49);
+    noecho();           
+    curs_set(0);        
+    Classifica cl;
+    cl.salvaPunteggio(nomeUtente, player->getPunteggio());
+    cl.visualizzaTopN();
 }
 
 
@@ -178,13 +188,8 @@ int main() {
 	}
 	else if(scelta == 1){
 		clear();
-		mvprintw(5, 15, "classifica");
-
-		refresh();
-
-		timeout(-1);
-		getch();
-		timeout(50);
+        Classifica cl;
+        cl.visualizzaTopN();
 	}
 	else if (scelta == 0){
 		avviaGioco = true;
@@ -269,18 +274,9 @@ int main() {
 		mvprintw(21, 0, "Tempo: %02d:%02d", timerPartita.getMinuti(), timerPartita.getSecondi());
 		mvprintw(22, 0, "Punteggio: %d", player.getPunteggio());
 
-        if (player.getVite() <= 0) {
+       if (player.getVite() <= 0 || timerPartita.isScaduto()) {
             clear();
-            lost(stdscr);
-            running = false;
-        }
-        else if (timerPartita.isScaduto()){
-    	    clear();
-    	    mvprintw(10, 15, "TEMPO SCADUTO!");
-            mvprintw(12, 12, "Inserire nome giocatore: ");//aggiugnere funzione punti/cl;assifica
-            timeout(-1);
-            refresh();
-            getch();
+            lost(stdscr, &player);
             running = false;
         }else if(won == true){
        	    clear();
