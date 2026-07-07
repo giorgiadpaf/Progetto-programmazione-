@@ -11,6 +11,8 @@ protected:
     int frameProi;
     int xp;
     int yp;
+    int reloadTimer;
+    int reloadTime;
 
 public:
     NemicoSparante(int y, int x, Map* m);
