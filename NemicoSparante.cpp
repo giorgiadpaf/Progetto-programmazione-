@@ -59,6 +59,15 @@ void NemicoSparante::disegna() {
     }
 }
 
+void NemicoSparante::controllaMorte(Bombe* pBombe, Giocatore* player){
+        Nemico::controllaMorte(pBombe, player);
+
+        if (!this->isVivo()) {
+            this->dirProiettile = -1;
+            this->yp = -1;
+            this->xp = -1;
+        }
+}
 
 int NemicoSparante::getYp() const {
     return yp;
