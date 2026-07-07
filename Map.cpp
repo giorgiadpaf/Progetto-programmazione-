@@ -58,7 +58,7 @@ void Map::printonscr() {
     wrefresh(window);
 }
 bool Map::isempty(int y, int x){
-    return logicmap[y][x] == 'N' ||logicmap[y][x] == 'P' || logicmap[y][x] == '.' ||
+    return logicmap[y][x] == ' ' || logicmap[y][x] == 'N' ||logicmap[y][x] == 'P' || logicmap[y][x] == '.' ||
 	    logicmap[y][x] == '^' || logicmap[y][x] == '&';
 }
 
@@ -90,7 +90,7 @@ bool Map::isonP(Giocatore& player){
 void Map::addenemy(int y, int x, int t){
     if (!isempty(y, x)) return;
     enemylist* tmp = new enemylist;
-    if(t <= 3){
+    if(t < 3){
         tmp->enemy = new Nemico(y,x, this, t);
         tmp->next = enemyL;
         enemyL = tmp;
