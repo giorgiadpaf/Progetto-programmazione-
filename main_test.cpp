@@ -207,8 +207,6 @@ int main() {
                     tmp->enemy->movimento(player.getY(), player.getX(), &gestoreBombe);
                 }
                 tmp->enemy->controllaMorte(&gestoreBombe, &player);
-                
-                // Punti per nemico ucciso
                 if (eraVivo && !tmp->enemy->isVivo()) {
                     player.aggiungiPunteggio(100);
                 }
@@ -218,7 +216,6 @@ int main() {
             player.controllaDanni(elist);
             player.decrementaInvulnerabilita();
 
-            // RENDERING
             clear();
             currmap->printonscr();
             gestoreBombe.aggiornaEStampa();
@@ -229,31 +226,27 @@ int main() {
                 tmp = tmp->next;
             }
             player.disegna();
-
-            // Interfaccia di gioco
             mvprintw(LINES - 2, 0, "Vite: %d | Tempo: %02d:%02d | Punteggio: %d", 
                      player.getVite(), timerPartita.getMinuti(), timerPartita.getSecondi(), player.getPunteggio());
 
-            // GESTIONE FINE PARTITA (Schermate centrate)
+            // GESTIONE FINE PARTITA 
             if (player.getVite() <= 0 || timerPartita.isScaduto()) {
-                lost(stdscr, &player); // Chiamata alla tua funzione centrata
+                lost(stdscr, &player); 
                 running = false;
             } 
             else if (won) {
-                victory(stdscr, &player, timerPartita); // Chiamata alla tua funzione centrata
+                victory(stdscr, &player, timerPartita); 
                 running = false;
             }
 
             refresh();
-            
-            // Aggiorna le coordinate "old" per il prossimo frame
             oldx = player.getX();
             oldy = player.getY();
         }
 
         // FASE 4: PULIZIA (Prima di tornare al menu)
         delete_maplist(mappa); 
-        timeout(50); // Assicura che il menu non sia bloccato
+        timeout(50); 
     }
 
     endwin();
