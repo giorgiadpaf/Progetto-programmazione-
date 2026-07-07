@@ -75,6 +75,8 @@ Map* loadMapsFromFile(const char* fileName, WINDOW* win) {
 
 //Funzione di delete per la classe map
 void delete_maplist(Map* mappa){
+    if(mappa == NULL) return;
+
     while(mappa->preclvl() != NULL){
         mappa = mappa->preclvl();
     }
@@ -94,14 +96,13 @@ void delete_maplist(Map* mappa){
     }
 }
 
-
-
+//main aggiornato per permettere al giocatore di muoversi tra una mappa e l'altra
 int main() {
     setlocale(LC_ALL, "");
     initscr();
     noecho();
     curs_set(0);
-    keypad(stdscr, TRUE); 
+    keypad(stdscr, TRUE);
     timeout(50);
     srand(time(NULL));
     start_color();
@@ -133,14 +134,13 @@ int main() {
         }
 
         // FASE 2: INIZIALIZZAZIONE PARTITA
-        Map* mappa = loadMapsFromFile("Maps.txt", stdscr);
-        if (mappa == NULL) {
+        Map* currmap = loadMapsFromFile("Maps.txt", stdscr);
+        if (currmap == NULL) {
             endwin();
             printf("Errore: Impossibile caricare il file Maps.txt\n");
             return 1;
         }
 
-        Map* currmap = mappa;
         Bombe gestoreBombe(currmap);
         Giocatore player(currmap->_yPspawn(), currmap->_xPspawn(), currmap, &gestoreBombe);
 
@@ -149,7 +149,7 @@ int main() {
 
         bool won = false;
         bool running = true;
-        
+
         // VARIABILI PER MESSAGGI ITEM A SCHERMO
         bool mostraMessaggio = false;
         const char* testoMessaggio = "";
@@ -166,7 +166,7 @@ int main() {
         while (running) {
             int c = getch();
             if (c == 'q') {
-                running = false; 
+                running = false;
                 break;
             }
 
@@ -190,7 +190,7 @@ int main() {
             }
             else if (tileSottoPlayer == '&') {
                 timerPartita.aggiungiTempo(30);
-                player.aggiungiPunteggio(5); 
+                player.aggiungiPunteggio(5);
                 currmap->setTile(player.getY(), player.getX(), '.');
 
                 // Attiva messaggio tempo
@@ -202,18 +202,48 @@ int main() {
             if (currmap->isonN(player)) {
                 Map* prossima = currmap->nextlvl();
                 if (prossima != NULL) {
-                    currmap->setPspawn(oldx, oldy); // Usa le coordinate salvate
+                    currmap->setPspawn(oldy, oldx);
                     currmap = prossima;
                     gestoreBombe = Bombe(currmap);
                     player.cambiaLivello(currmap, currmap->_yPspawn(), currmap->_xPspawn());
                     elist = currmap->_enemylist();
+
+                    Map* tmp = currmap->preclvl(); // Il livello che abbiamo appena lasciato
+
+                    if (tmp->iscomplete()) {
+                        Map* precmap = tmp->preclvl();
+
+                        // 1. Ricolleghiamo i puntatori della mappa
+                        if (precmap == NULL) {
+                            // Stavamo cancellando il livello 1
+                            currmap->setprec(NULL);
+                        } else {
+                            // Stavamo cancellando un livello intermedio
+                            precmap->setnext(currmap); // USA IL METODO CORRETTO PER IL NEXT QUI
+                            currmap->setprec(precmap);
+                        }
+
+                        // 2. Svuotiamo la memoria dai nemici (scritto una volta sola!)
+                        enemylist* i = tmp->_enemylist();
+                        enemylist* old_i = i;
+                        while (i != NULL) {
+                            old_i = i;
+                            i = i->next;
+                            delete old_i->enemy;
+                            delete old_i;
+                        }
+
+                        // 3. Distruggiamo la vecchia mappa
+                        delete tmp;
+                    }
                 } else {
                     won = true; // Fine dei livelli
                 }
-            }
-            else if (currmap->isonP(player)) {
+
+            }else if (currmap->isonP(player)) {
                 Map* precedente = currmap->preclvl();
                 if (precedente != NULL) {
+                    currmap->setPspawn(oldy, oldx); // Usa le coordinate salvate
                     currmap = precedente;
                     gestoreBombe = Bombe(currmap);
                     player.cambiaLivello(currmap, currmap->_yPspawn(), currmap->_xPspawn());
@@ -238,7 +268,7 @@ int main() {
             player.controllaDanni(elist);
             player.decrementaInvulnerabilita();
 
-            // CONTROLLO SCADENZA RAGGIO
+            // CONTR.OLLO SCADENZA RAGGIO
             if (raggioAttivo && difftime(time(NULL), timerRaggioInizio) >= 15) {
                 raggioAttivo = false;
                 mostraMessaggio = true;
@@ -246,40 +276,40 @@ int main() {
                 timerMessaggio = time(NULL);
             }
 
-            clear();
+            erase();
             currmap->printonscr();
             gestoreBombe.aggiornaEStampa();
-            
+
             tmp = currmap->_enemylist();
             while (tmp != NULL) {
                 tmp->enemy->disegna();
                 tmp = tmp->next;
             }
-            
+
             player.disegna();
-            
+
             // STAMPA HUD (Statistiche in basso)
-            mvprintw(LINES - 2, 0, "Vite: %d | Tempo: %02d:%02d | Punteggio: %d", 
+            mvprintw(LINES - 2, 0, "Vite: %d | Tempo: %02d:%02d | Punteggio: %d",
                      player.getVite(), timerPartita.getMinuti(), timerPartita.getSecondi(), player.getPunteggio());
 
             // STAMPA MESSAGGIO TEMPORANEO (appena sopra l'HUD)
             if (mostraMessaggio) {
                 if (difftime(time(NULL), timerMessaggio) <= 2) {
-                    attron(COLOR_PAIR(2)); 
-                    mvprintw(LINES - 3, 0, "%s", testoMessaggio); 
+                    attron(COLOR_PAIR(2));
+                    mvprintw(LINES - 3, 0, "%s", testoMessaggio);
                     attroff(COLOR_PAIR(2));
                 } else {
-                    mostraMessaggio = false; 
+                    mostraMessaggio = false;
                 }
             }
 
-            // GESTIONE FINE PARTITA 
+            // GESTIONE FINE PARTITA
             if (player.getVite() <= 0 || timerPartita.isScaduto()) {
-                menu.lost(stdscr, &player); 
+                menu.lost(stdscr, &player);
                 running = false;
-            } 
+            }
             else if (won) {
-                menu.victory(stdscr, &player, timerPartita); 
+                menu.victory(stdscr, &player, timerPartita);
                 running = false;
             }
 
@@ -289,9 +319,10 @@ int main() {
         }
 
         // FASE 4: PULIZIA (Prima di tornare al menu)
-        delete_maplist(mappa); 
-        timeout(50); 
+        delete_maplist(currmap);
+        timeout(50);
     }
+
 
     endwin();
     return 0;

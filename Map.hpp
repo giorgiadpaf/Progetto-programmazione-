@@ -37,14 +37,14 @@ public:
     void addenemy(int y, int x, int t); //aggiunge un nemico in testa alla enemylist della mappa
 
     bool isempty(int y, int x); //ritorna true se in quelle coordinate c'è una porta o se non c'è nulla
-
+    bool iscomplete();
     void addmapinq(Map* newmap);
 
     Map* nextlvl(); //ritornano il puntatore next o prec della mappa
     Map* preclvl();
-
-
-    //ritornano true se il giocatore è su una porta
+    void setprec(Map* prec_);
+    void setnext(Map* setnext_);
+    //ritornano false se il giocatore è su una porta
     bool isonN(Giocatore& player);
     bool isonP(Giocatore& player);
 

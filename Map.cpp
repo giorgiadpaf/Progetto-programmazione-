@@ -1,6 +1,7 @@
 #include <cstddef>
 #include <ncurses.h>
 #include <ctime>
+#include <type_traits>
 #include "Map.hpp"
 #include "Nemico.hpp"
 #include "NemicoSparante.hpp"
@@ -62,10 +63,20 @@ bool Map::isempty(int y, int x){
 	    logicmap[y][x] == '^' || logicmap[y][x] == '&';
 }
 
+bool Map::iscomplete(){
+    bool tmp = true;
+    enemylist* i = enemyL;
+    while (i != NULL) {
+        if(i->enemy->isVivo())
+            tmp = false;
+        i = i->next;
+    }
+    return tmp;
+}
+
 void Map::addmapinq(Map* newmap){
     if (newmap == NULL) return;
 
-    delete next;
     next = newmap;
     next->prec = this;
 }
@@ -78,7 +89,12 @@ Map* Map::preclvl(){
     return prec;
 }
 
-
+void Map::setprec(Map* prec_){
+    prec = prec_;
+}
+void Map::setnext(Map* next_){
+   next = next_;
+}
 bool Map::isonN(Giocatore& player){
     return logicmap[player.getY()][player.getX()] == 'N';
 }
@@ -90,7 +106,7 @@ bool Map::isonP(Giocatore& player){
 void Map::addenemy(int y, int x, int t){
     if (!isempty(y, x)) return;
     enemylist* tmp = new enemylist;
-    if(t < 3){
+    if(t <= 3){
         tmp->enemy = new Nemico(y,x, this, t);
         tmp->next = enemyL;
         enemyL = tmp;

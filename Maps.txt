@@ -27,7 +27,6 @@ MAPPA
 SPAWN 1 1
 NEMICO 6 10 1
 NEMICO 1 40 1
-NEMICO 15 35 2
 NEMICO 4 70 2
 NEMICO 10 60 3
 FINE_MAPPA
@@ -55,7 +54,6 @@ MAPPA
 ################################################################################
 SPAWN 2 1
 NEMICO 3 20 1
-NEMICO 10 40 2
 NEMICO 15 70 3
 NEMICO 3 7 4
 NEMICO 10 15 3
@@ -87,6 +85,8 @@ NEMICO 5 15 1
 NEMICO 11 31 2
 NEMICO 15 50 4
 NEMICO 7 65 2
+NEMICO 10 60 3
+NEMICO 5 30 3
 FINE_MAPPA
 
 MAPPA
@@ -112,8 +112,8 @@ MAPPA
 ################################################################################
 SPAWN 2 1
 NEMICO 10 20 3
-NEMICO 10 39  2
-NEMICO 10 60  1
+NEMICO 10 39  3
+NEMICO 10 60  4
 NEMICO 6  40 4
 NEMICO 15 40 2
 FINE_MAPPA
@@ -140,8 +140,10 @@ MAPPA
 #.................................###...............#############......*#*.....#
 ################################################################################
 SPAWN 2 1
-NEMICO 10 34 3
-NEMICO 10 40 3
-NEMICO 12 45 3
+NEMICO 10 34 4
+NEMICO 10 40 4
+NEMICO 12 45 4
 NEMICO 19 10 4
+NEMICO 15 10 4
+NEMICO 8 1 4
 FINE_MAPPA
