@@ -234,10 +234,9 @@ int main() {
         }else if(won == true){
        	    clear();
 <<<<<<< HEAD
-            menu.victory(stdscr);
+            menu.victory(stdscr, &player, timerPartita);
             delete_maplist(mappa);
 =======
-            victory(stdscr, &player, timerPartita);
 >>>>>>> 60056f412d2dfc63445a2ecff6876b0dcfb7396e
             running = false;
         }
