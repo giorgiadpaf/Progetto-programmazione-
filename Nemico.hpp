@@ -18,7 +18,7 @@ public:
     Nemico(int y, int x, Map* m, int t);
     virtual void movimento(int pY, int pX, Bombe* pBombe);
     virtual void disegna();
-    void controllaMorte(Bombe* pBombe, Giocatore* player);
+    virtual void controllaMorte(Bombe* pBombe, Giocatore* player);
 
     bool isVivo() const;
     virtual int getYp() const;
