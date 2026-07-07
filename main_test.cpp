@@ -254,14 +254,10 @@ int main() {
             // UPDATE NEMICI
             enemylist* tmp = elist;
             while (tmp != NULL) {
-                bool eraVivo = tmp->enemy->isVivo();
-                if (eraVivo) {
+                if (tmp->enemy->isVivo()) {
                     tmp->enemy->movimento(player.getY(), player.getX(), &gestoreBombe);
                 }
                 tmp->enemy->controllaMorte(&gestoreBombe, &player);
-                if (eraVivo && !tmp->enemy->isVivo()) {
-                    player.aggiungiPunteggio(100);
-                }
                 tmp = tmp->next;
             }
 
