@@ -53,15 +53,15 @@ void Bomba::aggiorna() {
 
 		    raggioEffettivo[d] = i;
 
-		    if(tile == '*' || tile == '$'){
+		    if(tile == '*' || tile == '$' || tile == '%'){
 			    if (tile == '$') {
-				    if(rand() % 2 == 0) {
-				    	punmappa->setTile(ny, nx, '^');
-				    } else {
-					punmappa->setTile(ny, nx, '&');
-				    }
-			    } else {
-				    punmappa->setTile(ny, nx, '.');
+				punmappa->setTile(ny, nx, '^');
+			    } 
+			    else if (tile == '%') {
+				punmappa->setTile(ny, nx, '&');
+			    } 
+			    else {
+				punmappa->setTile(ny, nx, '.');
 			    }
 			    
 			    if (player != NULL) {

@@ -19,36 +19,6 @@ Map::Map(Map* prec_, Map* next_,char logicmap_ [][81], int xPspawn_, int yPspawn
             logicmap[i][k] = logicmap_[i][k];
         }
     }
-
-    int contaMuri = 0;
-    int muriY[800] ,muriX[800]; //array per coordintae muri
-
-    //cerca le coordinate dei muri '*'
-    for(int i = 0; i < 20; i++){
-        for(int k = 0; k < 40; k++){
-            if(logicmap[i][k] == '*'){
-                muriY[contaMuri] = i;
-                muriX[contaMuri] = k;
-                contaMuri++;
-            }
-        }
-    }
-
-    // scelta casuale di due muri con item
-    int itemDaPiazzare = 2;
-    while(itemDaPiazzare > 0 && contaMuri > 0){
-        int indiceRandom = rand() % contaMuri; //scelta casuale
-        int y = muriY[indiceRandom];
-        int x = muriX[indiceRandom];
-        
-        logicmap[y][x] = '$'; // '$' muro con item
-        
-        //leva il muro scelto dalla lista per non sceglierlo due volte
-        muriY[indiceRandom] = muriY[contaMuri - 1];
-        muriX[indiceRandom] = muriX[contaMuri - 1];
-        contaMuri--;
-        itemDaPiazzare--;
-    }
 }
 
 void Map::setPspawn(int y, int x){xPspawn = x; yPspawn = y;}
@@ -69,7 +39,7 @@ void Map::printonscr() {
             }else if (cell == '#') {
                 mvwprintw(window, row, col, "%s", "█");
             }
-            else if (cell == '*' || cell == '$' || cell == 'p' || cell == 'n') {
+            else if (cell == '*' || cell == '$' || cell == '%' || cell == 'p' || cell == 'n') {
                 mvwprintw(window, row, col, "%s", "▒");
             }
 	    else if (cell == '^') {
