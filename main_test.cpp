@@ -237,10 +237,12 @@ int main() {
   	char tileSottoPlayer = mappa->whatsthere(player.getY(), player.getX());
 	if (tileSottoPlayer == '^') {
 		gestoreBombe.raccogliItem(10);
+		player.aggiungiPunteggio(5);
 		mappa->setTile(player.getY(), player.getX(), '.');
 	}
 	else if (tileSottoPlayer == '&') {
 		timerPartita.aggiungiTempo(30); //aggiunge 30 secondi 
+		player.aggiungiPunteggio(5);
 		mappa->setTile(player.getY(), player.getX(), '.');
 	}
 
@@ -293,7 +295,7 @@ int main() {
             running = false;
         }else if(won == true){
        	    clear();
-            victory(stdscr);
+            victory(stdscr, &player, timerPartita);
             running = false;
         }
 
