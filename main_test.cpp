@@ -106,7 +106,7 @@ int main() {
     srand(time(NULL));
     start_color();
     init_pair(1, COLOR_RED, COLOR_BLACK);    // Esplosione
-    init_pair(2, COLOR_YELLOW, COLOR_BLACK); // Item raggio
+    init_pair(2, COLOR_YELLOW, COLOR_BLACK); // Item raggio e Messaggi
     init_pair(3, COLOR_GREEN, COLOR_BLACK);  // Item tempo
 
     Menu menu;
@@ -123,6 +123,7 @@ int main() {
                 return 0;
             }
             else if (scelta == 1) { // CLASSIFICA
+                clear();
                 Classifica cl;
                 cl.visualizzaTopN();
             }
@@ -149,6 +150,14 @@ int main() {
         bool won = false;
         bool running = true;
         
+        // VARIABILI PER MESSAGGI ITEM A SCHERMO
+        bool mostraMessaggio = false;
+        const char* testoMessaggio = "";
+        time_t timerMessaggio = 0;
+
+        bool raggioAttivo = false;
+        time_t timerRaggioInizio = 0;
+
         // Salviamo le posizioni precedenti
         int oldx = player.getX();
         int oldy = player.getY();
@@ -167,14 +176,27 @@ int main() {
             // LOGICA ITEM
             char tileSottoPlayer = currmap->whatsthere(player.getY(), player.getX());
             if (tileSottoPlayer == '^') {
-                gestoreBombe.raccogliItem(10);
+                gestoreBombe.raccogliItem(15);
                 player.aggiungiPunteggio(5);
                 currmap->setTile(player.getY(), player.getX(), '.');
+
+                // Attiva messaggio raggio e cronometro
+                mostraMessaggio = true;
+                testoMessaggio = "*** RAGGIO BOMBA POTENZIATO PER 15 SECONDI ***";
+                timerMessaggio = time(NULL);
+
+                raggioAttivo = true;
+                timerRaggioInizio = time(NULL);
             }
             else if (tileSottoPlayer == '&') {
                 timerPartita.aggiungiTempo(30);
                 player.aggiungiPunteggio(5); 
                 currmap->setTile(player.getY(), player.getX(), '.');
+
+                // Attiva messaggio tempo
+                mostraMessaggio = true;
+                testoMessaggio = "*** +30 SECONDI EXTRA! ***";
+                timerMessaggio = time(NULL);
             }
 
             if (currmap->isonN(player)) {
@@ -216,6 +238,14 @@ int main() {
             player.controllaDanni(elist);
             player.decrementaInvulnerabilita();
 
+            // CONTROLLO SCADENZA RAGGIO
+            if (raggioAttivo && difftime(time(NULL), timerRaggioInizio) >= 15) {
+                raggioAttivo = false;
+                mostraMessaggio = true;
+                testoMessaggio = "*** EFFETTO RAGGIO TERMINATO! ***";
+                timerMessaggio = time(NULL);
+            }
+
             clear();
             currmap->printonscr();
             gestoreBombe.aggiornaEStampa();
@@ -225,9 +255,23 @@ int main() {
                 tmp->enemy->disegna();
                 tmp = tmp->next;
             }
+            
             player.disegna();
+            
+            // STAMPA HUD (Statistiche in basso)
             mvprintw(LINES - 2, 0, "Vite: %d | Tempo: %02d:%02d | Punteggio: %d", 
                      player.getVite(), timerPartita.getMinuti(), timerPartita.getSecondi(), player.getPunteggio());
+
+            // STAMPA MESSAGGIO TEMPORANEO (appena sopra l'HUD)
+            if (mostraMessaggio) {
+                if (difftime(time(NULL), timerMessaggio) <= 2) {
+                    attron(COLOR_PAIR(2)); 
+                    mvprintw(LINES - 3, 0, "%s", testoMessaggio); 
+                    attroff(COLOR_PAIR(2));
+                } else {
+                    mostraMessaggio = false; 
+                }
+            }
 
             // GESTIONE FINE PARTITA 
             if (player.getVite() <= 0 || timerPartita.isScaduto()) {
