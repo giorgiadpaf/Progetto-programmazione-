@@ -1,3 +1,8 @@
-losfuggente_ 895
+<<<<<<< Updated upstream
+ 1710
+=======
 losfuggente 495
 lsls 50
+dsasd 0
+ 0
+>>>>>>> Stashed changes

@@ -36,10 +36,23 @@ Esecuzione:
 
     ./bomberman
 
-🎮 Comandi di Gioco
+🎮 Comandi di Gioco:
 
     WASD / Frecce direzionali: Movimento del giocatore.
 
     Barra Spaziatrice: Piazzamento bomba.
 
     Q: Uscita rapida dalla partita.
+
+Elementi di gioco: 
+  - █ Muri: Indistruttibili.
+  - ▒ Muri Distruttibili: Falli esplodere per trovare oggetti o liberare il passaggio.
+  - ⊞ Portali: Usali per viaggiare tra il livello precedente (P) e quello successivo (N).
+Item:
+  - ? Potenziamento Raggio: Aumenta l'esplosione delle bombe per 15 secondi.
+  - + Tempo Extra: Aggiunge 30 secondi al timer.
+Nemici:
+  - $ Tipo 1: movimento casuale.
+  - #. Tipo 2: Inseguimento rapido.
+  - & Tipo 3 inseguimento.
+  - & Tipo 4: nemico sparante.

@@ -286,7 +286,7 @@ int main() {
 
             // STAMPA HUD (Statistiche in basso)
             mvprintw(LINES - 2, 0, "Vite: %d | Tempo: %02d:%02d | Punteggio: %d",
-                     player.getVite(), timerPartita.getMinuti(), timerPartita.getSecondi(), player.getPunteggio());
+            player.getVite(), timerPartita.getMinuti(), timerPartita.getSecondi(), player.getPunteggio());
 
             // STAMPA MESSAGGIO TEMPORANEO (appena sopra l'HUD)
             if (mostraMessaggio) {
@@ -318,8 +318,7 @@ int main() {
         delete_maplist(currmap);
         timeout(50);
     }
-
-
     endwin();
     return 0;
+
 }

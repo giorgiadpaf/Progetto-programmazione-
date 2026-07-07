@@ -112,8 +112,13 @@ MAPPA
 ################################################################################
 SPAWN 2 1
 NEMICO 10 20 3
+<<<<<<< Updated upstream
 NEMICO 10 39  3
 NEMICO 10 60  4
+=======
+NEMICO 10 39  2
+NEMICO 10 60  1
+>>>>>>> Stashed changes
 NEMICO 6  40 4
 NEMICO 15 40 2
 FINE_MAPPA
@@ -140,10 +145,17 @@ MAPPA
 #.................................###...............#############......*#*.....#
 ################################################################################
 SPAWN 2 1
+<<<<<<< Updated upstream
 NEMICO 10 34 4
 NEMICO 10 40 4
 NEMICO 12 45 4
 NEMICO 19 10 4
 NEMICO 15 10 4
 NEMICO 8 1 4
+=======
+NEMICO 10 34 3
+NEMICO 10 40 3
+NEMICO 12 45 3
+NEMICO 19 10 4
+>>>>>>> Stashed changes
 FINE_MAPPA

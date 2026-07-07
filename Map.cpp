@@ -1,10 +1,10 @@
 #include <cstddef>
 #include <ncurses.h>
 #include <ctime>
-#include <type_traits>
 #include "Map.hpp"
 #include "Nemico.hpp"
 #include "NemicoSparante.hpp"
+#include <cstring>
 using namespace std;
 
 Map::Map(Map* prec_, Map* next_,char logicmap_ [][81], int xPspawn_, int yPspawn_, WINDOW* window_, enemylist* enemyL_){
@@ -16,11 +16,7 @@ Map::Map(Map* prec_, Map* next_,char logicmap_ [][81], int xPspawn_, int yPspawn
     xPspawn = xPspawn_;
     yPspawn = yPspawn_;
 
-    for(int i = 0; i < 20; i++){
-        for(int k = 0; k <= 80; k++){
-            logicmap[i][k] = logicmap_[i][k];
-        }
-    }
+    memcpy(logicmap, logicmap_, sizeof(logicmap));
 }
 
 void Map::setPspawn(int y, int x){xPspawn = x; yPspawn = y;}
