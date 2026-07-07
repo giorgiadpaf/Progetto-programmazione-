@@ -14,97 +14,7 @@
 #include "Menu.hpp"
 #include "Tempo.hpp"
 
-void victory(WINDOW* win) {
-    clear();
-    box(win, 0, 0);
-    int max_y, max_x;
-    getmaxyx(win, max_y, max_x);
 
-    const char* scritta[6] = {
-        "██╗   ██╗██╗████████╗████████╗██████╗ ██████╗ ██╗ █████╗ ",
-        "██║   ██║██║╚══██╔══╝╚══██╔══╝██╔══██╗██╔══██╗██║██╔══██╗",
-        "██║   ██║██║   ██║      ██║   ██║  ██║██████╔╝██║███████║",
-        "╚██╗ ██╔╝██║   ██║      ██║   ██║  ██║██╔══██╗██║██╔══██║",
-        " ╚████╔╝ ██║   ██║      ██║   ██████╔╝██║  ██║██║██║  ██║",
-        "  ╚═══╝  ╚═╝   ╚═╝      ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝"
-    };
-
-    int larghezza_scritta = 57;
-    int altezza_scritta = 6;
-    int altezza_totale = 11;
-
-    int start_y = (max_y - altezza_totale) / 2;
-    int start_x_scritta = (max_x - larghezza_scritta) / 2;
-
-    for (int i = 0; i < altezza_scritta; i++) {
-        mvwprintw(win, start_y + i, start_x_scritta, "%s", scritta[i]);
-    }
-    //possibilmente stampare anche  il punteggio a schermo
-    const char* msg1 = "HAI COMPLETATO TUTTI I LIVELLI!";
-    const char* msg2 = "Premi un tasto per uscire...";
-    const char* msg3 = "Inserisci il tuo nome per aggiornare la classifica: ";
-    int start_x_msg1 = (max_x - strlen(msg1)) / 2;
-    int start_x_msg2 = (max_x - strlen(msg2)) / 2;
-    int start_x_msg3 = (max_x - strlen(msg3)) / 2;
-
-    mvwprintw(win, start_y + altezza_scritta + 2, start_x_msg1, "%s", msg1);
-    mvwprintw(win, start_y + altezza_scritta + 4, start_x_msg2, "%s", msg2);
-    mvwprintw(win, start_y + altezza_scritta + 6, start_x_msg3, "%s", msg3);
-    wrefresh(win);
-
-    timeout(-1); // Ferma l'esecuzione all'infinito in attesa di input
-    getch();     // Cattura il tasto per poi chiudere
-}
-
-void lost(WINDOW* win, Giocatore* player) {
-	flushinp();      
-    timeout(-1);   
-    clear();
-    box(win, 0, 0);
-    int max_y, max_x;
-    getmaxyx(win, max_y, max_x);
-
-    const char* scritta[6] = {
-        "██╗  ██╗ █████╗ ██╗    ██████╗ ███████╗██████╗ ███████╗ ██████╗ ",
-        "██║  ██║██╔══██╗██║    ██╔══██╗██╔════╝██╔══██╗██╔════╝██╔═══██╗",
-        "███████║███████║██║    ██████╔╝█████╗  ██████╔╝███████╗██║   ██║",
-        "██╔══██║██╔══██║██║    ██╔═══╝ ██╔══╝  ██╔══██╗╚════██║██║   ██║",
-        "██║  ██║██║  ██║██║    ██║     ███████╗██║  ██║███████║╚██████╔╝",
-        "╚═╝  ╚═╝╚═╝  ╚═╝╚═╝    ╚═╝     ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝ "
-    };
-
-    int larghezza_scritta = 64;
-    int altezza_scritta = 6;
-    int altezza_totale = 11;
-
-    int start_y = (max_y - altezza_totale) / 2;
-    int start_x_scritta = (max_x - larghezza_scritta) / 2;
-
-    for (int i = 0; i < altezza_scritta; i++) {
-        mvwprintw(win, start_y + i, start_x_scritta, "%s", scritta[i]);
-    }
-	const char* msg1;
-    if(player->getVite() <= 0) msg1 = "HAI TERMINATO LE VITE A DISPOSIZIONE :(";
-    else msg1 = "HAI TERMINATO IL TEMPO A DISPOSIZIONE :(";
-    int start_x_msg1 = (max_x - strlen(msg1)) / 2;
-    mvwprintw(win, start_y + altezza_scritta + 2, start_x_msg1, "%s", msg1);
-    char prompt[50];
-    sprintf(prompt, "PUNTEGGIO FINALE: %d", player->getPunteggio());
-    mvwprintw(win, start_y + altezza_scritta + 4, (max_x - strlen(prompt)) / 2, "%s", prompt);
-    const char* chiedi_nome = "Inserisci il tuo nome per la classifica:";
-    mvwprintw(win, start_y + altezza_scritta + 6, (max_x - strlen(chiedi_nome)) / 2, "%s", chiedi_nome);
-    wrefresh(win);
-    char nomeUtente[50];
-    echo();             
-    curs_set(1);       
-    wmove(win, start_y + altezza_scritta + 9, (max_x / 2) - 10);
-    wgetnstr(win, nomeUtente, 49);
-    noecho();           
-    curs_set(0);        
-    Classifica cl;
-    cl.salvaPunteggio(nomeUtente, player->getPunteggio());
-    cl.visualizzaTopN();
-}
 
 
 //funzione che fa il parsing di un file e costruisce direttamente la lista di livelli
@@ -164,8 +74,29 @@ Map* loadMapsFromFile(const char* fileName, WINDOW* win) {
     file.close();
     return head;
 }
+
+//Funzione di delete per la classe map
+void delete_maplist(Map* mappa){
+    while(mappa->preclvl() != NULL){
+        mappa = mappa->preclvl();
+    }
+
+    while (mappa != NULL){
+        enemylist* tmp = mappa->_enemylist();
+        enemylist* prec = tmp;
+        while(tmp != NULL){
+            prec = tmp;
+            tmp = tmp->next;
+            delete prec->enemy;
+            delete prec;
+        }
+        Map* tmpmap = mappa;
+        mappa = mappa->nextlvl();
+        delete tmpmap;
+    }
+}
+
 //main aggiornato per permettere al giocatore di muoversi tra una mappa e l'altra
-//i nemici non si muovono, non so come funzionano
 int main() {
     setlocale(LC_ALL, "");
     initscr();
@@ -206,51 +137,56 @@ int main() {
         return 1;
     }
 
-    Bombe gestoreBombe(mappa);
-    Giocatore player(mappa->_yPspawn(), mappa->_xPspawn(), mappa, &gestoreBombe);
+    Map* currmap = mappa;
+    Bombe gestoreBombe(currmap);
+    Giocatore player(currmap->_yPspawn(), currmap->_xPspawn(), currmap, &gestoreBombe);
 
     Tempo timerPartita(600);
     timerPartita.start();
 
     bool won = false;
     bool running = true;
-
+    int oldx = player.getX();
+    int oldy = player.getY();
     while (running) {
         int c = getch();
-        if (c == 'q') break;
+        if (c == 'q') {
+            delete_maplist(mappa);
+            break;
+        }
 
-        enemylist* elist = mappa->_enemylist();
+        enemylist* elist = currmap->_enemylist();
 
         player.muovi(c);
 
-	//controlla se il giocatore calpersta item
-  	char tileSottoPlayer = mappa->whatsthere(player.getY(), player.getX());
-	if (tileSottoPlayer == '^') {
-		gestoreBombe.raccogliItem(10);
-		mappa->setTile(player.getY(), player.getX(), '.');
-	}
-	else if (tileSottoPlayer == '&') {
-		timerPartita.aggiungiTempo(30); //aggiunge 30 secondi 
-		mappa->setTile(player.getY(), player.getX(), '.');
-	}
+    	//controlla se il giocatore calpersta item
+    	char tileSottoPlayer = currmap->whatsthere(player.getY(), player.getX());
+    	if (tileSottoPlayer == '^') {
+    		gestoreBombe.raccogliItem(10);
+    		currmap->setTile(player.getY(), player.getX(), '.');
+    	}
+    	else if (tileSottoPlayer == '&') {
+    		timerPartita.aggiungiTempo(30); //aggiunge 30 secondi
+    		currmap->setTile(player.getY(), player.getX(), '.');
+    	}
 
-        if (mappa->isonN(player)) { 
-            Map* prossima = mappa->nextlvl();
+        if (currmap->isonN(player)) {
+            Map* prossima = currmap->nextlvl();
             if (prossima != NULL) {
-                mappa->setPspawn(player.getX()-1,player.getY());
-                mappa = prossima;
-                gestoreBombe = Bombe(mappa);
-                player.cambiaLivello(mappa, mappa->_xPspawn(), mappa->_yPspawn());
-                elist = mappa->_enemylist();
+                currmap->setPspawn(oldx,oldy);
+                currmap = prossima;
+                gestoreBombe = Bombe(currmap);
+                player.cambiaLivello(currmap, currmap->_xPspawn(), currmap->_yPspawn());
+                elist = currmap->_enemylist();
             }else{won = true;}
 
-        }else if (mappa->isonP(player)) {
-            Map* precedente = mappa->preclvl();
+        }else if (currmap->isonP(player)) {
+            Map* precedente = currmap->preclvl();
             if (precedente != NULL) {
-                mappa = precedente;
-                gestoreBombe = Bombe(mappa);
-                player.cambiaLivello(mappa, mappa->_xPspawn(), mappa->_yPspawn());
-                elist = mappa->_enemylist();
+                currmap = precedente;
+                gestoreBombe = Bombe(currmap);
+                player.cambiaLivello(currmap, currmap->_xPspawn(), currmap->_yPspawn());
+                elist = currmap->_enemylist();
             }
         }
 
@@ -265,7 +201,7 @@ int main() {
 
         clear();
 
-        mappa->printonscr();
+        currmap->printonscr();
         gestoreBombe.aggiornaEStampa();
         tmp = elist;
         while (tmp != NULL) {
@@ -279,15 +215,20 @@ int main() {
 
        if (player.getVite() <= 0 || timerPartita.isScaduto()) {
             clear();
-            lost(stdscr, &player);
+            menu.lost(stdscr, &player);
+            delete_maplist(mappa);
             running = false;
         }else if(won == true){
        	    clear();
-            victory(stdscr);
+            menu.victory(stdscr);
+            delete_maplist(mappa);
             running = false;
         }
 
+       oldx = player.getX();
+       oldy = player.getY();
     }
+
 
     endwin();
     return 0;

@@ -3,6 +3,7 @@
 #include <ctime>
 #include "Map.hpp"
 #include "Nemico.hpp"
+#include "NemicoSparante.hpp"
 using namespace std;
 
 Map::Map(Map* prec_, Map* next_,char logicmap_ [][81], int xPspawn_, int yPspawn_, WINDOW* window_, enemylist* enemyL_){
@@ -32,27 +33,23 @@ void Map::printonscr() {
 
     for (int row = 0; row < 20; row++) {
         for (int col = 0; col < 80; col++) {
-
             char cell = logicmap[row][col];
+
             if(cell == 'N' || cell == 'P'){
                 mvwprintw(window, row, col, "%s", "⊞");
             }else if (cell == '#') {
                 mvwprintw(window, row, col, "%s", "█");
-            }
-            else if (cell == '*' || cell == '$' || cell == '%' || cell == 'p' || cell == 'n') {
+            }else if (cell == '*' || cell == '$' || cell == '%' || cell == 'n') {
                 mvwprintw(window, row, col, "%s", "▒");
-            }
-	    else if (cell == '^') {
-		    attron(COLOR_PAIR(2));
-		    mvwprintw(window, row, col, "%s", "?"); //item: aumento raggio
-		    attroff(COLOR_PAIR(2));
-	    }
-	    else if (cell == '&') {
-		    attron(COLOR_PAIR(3));
-		    mvwprintw(window, row, col, "%s", "+");//item: tempo extra
-		    attroff(COLOR_PAIR(3));
-	    } 
-	    else {
+            }else if (cell == '^') {
+    		    attron(COLOR_PAIR(2));
+    		    mvwprintw(window, row, col, "%s", "?"); //item: aumento raggio
+    		    attroff(COLOR_PAIR(2));
+    	    }else if (cell == '&') {
+    		    attron(COLOR_PAIR(3));
+    		    mvwprintw(window, row, col, "%s", "+");//item: tempo extra
+    		    attroff(COLOR_PAIR(3));
+    	    }else {
                 mvwprintw(window, row, col, "%c", ' ');
             }
         }
@@ -61,7 +58,7 @@ void Map::printonscr() {
     wrefresh(window);
 }
 bool Map::isempty(int y, int x){
-    return logicmap[y][x] == 'N' ||logicmap[y][x] == 'P' || logicmap[y][x] == '.' || 
+    return logicmap[y][x] == 'N' ||logicmap[y][x] == 'P' || logicmap[y][x] == '.' ||
 	    logicmap[y][x] == '^' || logicmap[y][x] == '&';
 }
 
@@ -91,11 +88,17 @@ bool Map::isonP(Giocatore& player){
 }
 
 void Map::addenemy(int y, int x, int t){
-    if (!isempty(y, x))     return;
+    if (!isempty(y, x)) return;
     enemylist* tmp = new enemylist;
-    tmp->enemy = new Nemico(y,x, this, t);
-    tmp->next = enemyL;
-    enemyL = tmp;
+    if(t <= 3){
+        tmp->enemy = new Nemico(y,x, this, t);
+        tmp->next = enemyL;
+        enemyL = tmp;
+    }else{
+        tmp->enemy = new NemicoSparante(y,x, this);
+        tmp->next = enemyL;
+        enemyL = tmp;
+    }
 }
 
 //per esplosione muri

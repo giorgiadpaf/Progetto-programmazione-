@@ -22,10 +22,10 @@ void Giocatore::cambiaLivello(Map* nuovaMappa, int nuovoY, int nuovoX) {
 void Giocatore::muovi(int input){
     int newx = x;
     int newy = y;
-    if (input == 'a' || input == KEY_LEFT) newx--;
-    else if (input == 'w' || input == KEY_UP) newy--;
-    else if (input == 'd' || input == KEY_RIGHT) newx++;
-    else if (input == 's' || input == KEY_DOWN) newy++;
+    if (input == 'a' || input == 'A' || input == KEY_LEFT) newx--;
+    else if (input == 'w' || input == 'W' ||input == KEY_UP) newy--;
+    else if (input == 'd' || input == 'D' || input == KEY_RIGHT) newx++;
+    else if (input == 's' || input == 'S' || input == KEY_DOWN) newy++;
 
     if(punmappa->isempty(newy, newx) && !pBombe->cEunaBomba(newy, newx)){
         y=newy;
