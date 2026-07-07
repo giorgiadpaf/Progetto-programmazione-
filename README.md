@@ -17,20 +17,24 @@ Per vincere bisogna completare tutti i 5 livelli. Muoviti nei corridoi, distrugg
 Requisiti e Compilazione
 
 Il progetto è stato sviluppato per ambiente Debian. Per compilare il gioco è necessario il compilatore g++ e la libreria ncurses.
+
 Installazione dipendenze:
 
-sudo apt update
-sudo apt install build-essential libncursesw5-dev
+    sudo apt update
+    
+    sudo apt install build-essential libncursesw5-dev
 
 Compilazione:
+
 Utilizzare il Makefile incluso o il comando manuale:
 
-g++ *.cpp -lncursesw -o bomberman
+    g++ *.cpp -lncursesw -o bomberman
 
 (Nota: l'uso di -lncursesw garantisce il supporto ai caratteri speciali del terminale).
+
 Esecuzione:
 
-./bomberman
+    ./bomberman
 
 🎮 Comandi di Gioco
 
