@@ -231,11 +231,11 @@ int main() {
 
             // GESTIONE FINE PARTITA 
             if (player.getVite() <= 0 || timerPartita.isScaduto()) {
-                lost(stdscr, &player); 
+                menu.lost(stdscr, &player); 
                 running = false;
             } 
             else if (won) {
-                victory(stdscr, &player, timerPartita); 
+                menu.victory(stdscr, &player, timerPartita); 
                 running = false;
             }
 
