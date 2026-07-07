@@ -41,8 +41,6 @@ void Giocatore::controllaDanni(enemylist* listaNemici) {
     if (invulnerabile > 0) return;
     if(pBombe->colpitaDaEsplosione(y, x)){
         vite--;
-        y = startY;
-        x = startX;
         invulnerabile = 40;
         return;
     }
