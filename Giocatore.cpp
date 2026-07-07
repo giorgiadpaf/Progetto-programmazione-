@@ -2,7 +2,7 @@
 #include "Map.hpp"
 #include "Bombe.hpp"
 #include "Nemico.hpp"
-Giocatore::Giocatore(int y, int x, Map* mappa, Bombe* pBombe) : Entita(y, x, mappa, 'A') {
+Giocatore::Giocatore(int y, int x, Map* mappa, Bombe* pBombe) : Entita(y, x, mappa, '@') {
     this->pBombe = pBombe;
     this->vite = 3;
     this->startY = y;
@@ -12,10 +12,10 @@ Giocatore::Giocatore(int y, int x, Map* mappa, Bombe* pBombe) : Entita(y, x, map
 }
 
 void Giocatore::cambiaLivello(Map* nuovaMappa, int nuovoY, int nuovoX) {
-    punmappa = nuovaMappa; // Aggiorna la mappa del giocatore
-    y = nuovoY;            // Imposta la nuova posizione Y
-    x = nuovoX;            // Imposta la nuova posizione X
-    startY = nuovoY;       // Aggiorna lo spawn di sicurezza in caso di danno
+    punmappa = nuovaMappa;
+    y = nuovoY;
+    x = nuovoX;
+    startY = nuovoY;
     startX = nuovoX;
 }
 
@@ -37,15 +37,13 @@ void Giocatore::muovi(int input){
     }
 }
 
-//adattato la funzione alla nuova implementazione con liste dei nemici
 void Giocatore::controllaDanni(enemylist* listaNemici) {
     if (invulnerabile > 0) return;
-
     if(pBombe->colpitaDaEsplosione(y, x)){
         vite--;
         y = startY;
         x = startX;
-        invulnerabile = 20;
+        invulnerabile = 40;
         return;
     }
 
@@ -56,7 +54,12 @@ void Giocatore::controllaDanni(enemylist* listaNemici) {
                 vite--;
                 y = startY;
                 x = startX;
-                invulnerabile = 20;
+                invulnerabile = 40;
+                return;
+            }
+            if (tmp->enemy->getYp() == y && tmp->enemy->getXp() == x) {
+                vite--;
+                invulnerabile = 40;
                 return;
             }
         }
@@ -69,7 +72,15 @@ void Giocatore::decrementaInvulnerabilita() {
 }
 
 void Giocatore::disegna() {
-    mvaddch(y, x, '@');
+    if (invulnerabile > 0) {
+        if (invulnerabile % 2 == 0) {
+            return; // Salta il disegno: crea l'effetto lampeggiante
+        }
+    }
+
+    attron(COLOR_PAIR(0));
+    mvaddch(y, x, simbolo);
+    attroff(COLOR_PAIR(0));
 }
 
 int Giocatore::getVite() const { return vite; }
