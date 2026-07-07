@@ -6,11 +6,11 @@ Lo scopo di Bomberman è eliminare gli avversari piazzando bombe su una griglia.
 Per vincera bisogna completare tutti i 5 livelli. Muoviti nei corridoi, distruggi i muri di mattoni, raccogli i potenziamenti nascosti e trova le porte per passare di livello. 
 👥 Sviluppatori
 
-    Componente #1: Giorgia Dal Prà - Gestione Entità (Giocatore/Nemici), Punteggio e Classifica.
+    Componente #1: Giorgia Dal Prà - Gestione Entità, Punteggio e Classifica.
 
-    Componente #2: [Nome Compagno] - Gestione Mappa, Livelli e grafica.
+    Componente #2: Leonardo Silenzi - Gestione Mappa, Livelli e Grafica.
 
-    Componente #3: [Nome Compagno] - Gestione Bombe, Item, Menu, Tempo.
+    Componente #3: Federico Finamore - Gestione Bombe, Item, Menu e Tempo.
 
 Requisiti e Compilazione
 
