@@ -51,7 +51,7 @@ void NemicoSparante::movimento(int pY, int pX, Bombe* pBombe) {
 }
 
 void NemicoSparante::disegna() {
-    Nemico::disegna(); /
+    Nemico::disegna();
     if (dirProiettile != -1) {
         attron(COLOR_PAIR(1));
         mvaddch(yp, xp, '*');
