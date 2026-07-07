@@ -15,8 +15,6 @@
 #include "Tempo.hpp"
 
 
-
-
 //funzione che fa il parsing di un file e costruisce direttamente la lista di livelli
 // inserisce sia la lista di nemici sia il punto di spawn del giocatore e concatena tutte le mappe
 Map* loadMapsFromFile(const char* fileName, WINDOW* win) {
@@ -159,6 +157,7 @@ int main() {
 
         player.muovi(c);
 
+<<<<<<< HEAD
     	//controlla se il giocatore calpersta item
     	char tileSottoPlayer = currmap->whatsthere(player.getY(), player.getX());
     	if (tileSottoPlayer == '^') {
@@ -169,6 +168,20 @@ int main() {
     		timerPartita.aggiungiTempo(30); //aggiunge 30 secondi
     		currmap->setTile(player.getY(), player.getX(), '.');
     	}
+=======
+	//controlla se il giocatore calpersta item
+  	char tileSottoPlayer = mappa->whatsthere(player.getY(), player.getX());
+	if (tileSottoPlayer == '^') {
+		gestoreBombe.raccogliItem(10);
+		player.aggiungiPunteggio(5);
+		mappa->setTile(player.getY(), player.getX(), '.');
+	}
+	else if (tileSottoPlayer == '&') {
+		timerPartita.aggiungiTempo(30); //aggiunge 30 secondi
+		player.aggiungiPunteggio(5);
+		mappa->setTile(player.getY(), player.getX(), '.');
+	}
+>>>>>>> 60056f412d2dfc63445a2ecff6876b0dcfb7396e
 
         if (currmap->isonN(player)) {
             Map* prossima = currmap->nextlvl();
@@ -220,8 +233,12 @@ int main() {
             running = false;
         }else if(won == true){
        	    clear();
+<<<<<<< HEAD
             menu.victory(stdscr);
             delete_maplist(mappa);
+=======
+            victory(stdscr, &player, timerPartita);
+>>>>>>> 60056f412d2dfc63445a2ecff6876b0dcfb7396e
             running = false;
         }
 

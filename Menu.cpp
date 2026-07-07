@@ -54,8 +54,9 @@ int Menu::opzione() {
     }
 }
 
-
-void Menu::victory(WINDOW* win) {
+void Menu::victory(WINDOW* win, Giocatore* player, Tempo& timerPartita) {
+    flushinp();
+    timeout(-1);
     clear();
     box(win, 0, 0);
     int max_y, max_x;
@@ -70,28 +71,39 @@ void Menu::victory(WINDOW* win) {
         "  ╚═══╝  ╚═╝   ╚═╝      ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝"
     };
 
-    int larghezza_scritta = 57;
+    int start_y = (max_y - 15) / 2;
+    int start_x_scritta = (max_x - 57) / 2;
     int altezza_scritta = 6;
-    int altezza_totale = 11;
-
-    int start_y = (max_y - altezza_totale) / 2;
-    int start_x_scritta = (max_x - larghezza_scritta) / 2;
-
-    for (int i = 0; i < altezza_scritta; i++) {
+    for (int i = 0; i < 6; i++) {
         mvwprintw(win, start_y + i, start_x_scritta, "%s", scritta[i]);
     }
-    //possibilmente stampare anche  il punteggio a schermo
+
+    // CALCOLO BONUS TEMPO (2 punti per ogni secondo rimasto)
+    int secondiTotali = timerPartita.getSecondi() + (timerPartita.getMinuti() * 60);
+    int bonus = secondiTotali * 2;
+    player->aggiungiPunteggio(bonus);
+
     const char* msg1 = "HAI COMPLETATO TUTTI I LIVELLI!";
-    const char* msg2 = "Inserisci il tuo nome per aggiornare la classifica: ";
-    int start_x_msg1 = (max_x - strlen(msg1)) / 2;
-    int start_x_msg2 = (max_x - strlen(msg2)) / 2;
+    mvwprintw(win, start_y + 8, (max_x - strlen(msg1)) / 2, "%s", msg1);
 
-    mvwprintw(win, start_y + altezza_scritta + 2, start_x_msg1, "%s", msg1);
-    mvwprintw(win, start_y + altezza_scritta + 6, start_x_msg2, "%s", msg2);
+    char prompt[60];
+    sprintf(prompt, "PUNTEGGIO FINALE (Bonus Tempo +%d): %d", bonus, player->getPunteggio());
+    mvwprintw(win, start_y + 10, (max_x - strlen(prompt)) / 2, "%s", prompt);
+
+    const char* msg3 = "Inserisci il tuo nome per la classifica:";
+    mvwprintw(win, start_y + 12, (max_x - strlen(msg3)) / 2, "%s", msg3);
+
     wrefresh(win);
-
-    timeout(-1); // Ferma l'esecuzione all'infinito in attesa di input
-    getch();     // Cattura il tasto per poi chiudere
+    char nomeUtente[50];
+    echo();
+    curs_set(1);
+    wmove(win, start_y + altezza_scritta + 9, (max_x / 2) - 10);
+    wgetnstr(win, nomeUtente, 49);
+    noecho();
+    curs_set(0);
+    Classifica cl;
+    cl.salvaPunteggio(nomeUtente, player->getPunteggio());
+    cl.visualizzaTopN();
 }
 
 void Menu::lost(WINDOW* win, Giocatore* player) {
