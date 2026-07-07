@@ -1,12 +1,12 @@
 Bomberman ASCII - Progetto di Programmazione
 
-Repository del progetto "Bomberman" per l'esame del corso di "Programmazione" AA. 2025-2026 del corso triennale di Informatica presso l'Università di Bologna. 
+Repository del progetto Bomberman, sviluppato per l'esame del corso di Programmazione (A.A. 2025–2026) del Corso di Laurea Triennale in Informatica dell'Università di Bologna.
 Il software è un'implementazione del classico videogioco arcade, sviluppata interamente in C++ con l'ausilio della libreria grafica ncurses per terminali Debian/Linux.
 Lo scopo di Bomberman è eliminare gli avversari piazzando bombe su una griglia. Un livello è completo quando vengono eliminati tutti i nemici. 
 Per vincere bisogna completare tutti i 5 livelli. Muoviti nei corridoi, distruggi i muri di mattoni, raccogli i potenziamenti nascosti e trova le porte per passare di livello. 
 
 
-👥 Sviluppatori
+Sviluppatori:
 
     Componente #1: Giorgia Dal Prà - Gestione Entità, Punteggio e Classifica.
 
