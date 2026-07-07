@@ -17,6 +17,68 @@
 
 //funzione che fa il parsing di un file e costruisce direttamente la lista di livelli
 // inserisce sia la lista di nemici sia il punto di spawn del giocatore e concatena tutte le mappe
+
+int customAtoi(const char* str) {
+    int result = 0;
+    int i = 0;
+    int sign = 1;
+
+    // Gestisce un eventuale segno negativo
+    if (str[0] == '-') {
+        sign = -1;
+        i++;
+    }
+
+    // Scorre i caratteri finche' non trova il terminatore di stringa '\0'
+    while (str[i] != '\0') {
+        // Se e' un numero compreso tra '0' e '9'
+        if (str[i] >= '0' && str[i] <= '9') {
+            // Sposta le decine a sinistra e somma il nuovo numero
+            result = result * 10 + (str[i] - '0');
+        }
+        i++;
+    }
+
+    return result * sign;
+}
+
+// Funzione di supporto per capire se un carattere e' "vuoto"
+bool isWhitespace(char c) {
+    return c == ' ' || c == '\n' || c == '\t' || c == '\r';
+}
+
+// Funzione custom che legge carattere per carattere saltando gli spazi
+bool readNextWord(std::ifstream& file, char* buffer) {
+    char c;
+    int idx = 0;
+
+    // 1. Salta tutti gli spazi vuoti iniziali
+    while (file.get(c)) {
+        if (!isWhitespace(c)) {
+            buffer[idx++] = c;
+            break;
+        }
+    }
+
+    // Se siamo alla fine del file
+    if (idx == 0) {
+        buffer[0] = '\0';
+        return false;
+    }
+
+    // 2. Continua a leggere e memorizzare finche' non trova un altro spazio
+    while (file.get(c)) {
+        if (isWhitespace(c)) {
+            break;
+        }
+        buffer[idx++] = c;
+    }
+
+    buffer[idx] = '\0';
+    return true;
+}
+
+// Funzione che fa il parsing di un file usando solo estrazione di singoli caratteri
 Map* loadMapsFromFile(const char* fileName, WINDOW* win) {
     std::ifstream file(fileName);
     if (!file.is_open()) {
@@ -25,16 +87,18 @@ Map* loadMapsFromFile(const char* fileName, WINDOW* win) {
 
     Map* head = NULL;
     Map* currentMap = NULL;
-    char word[1700];
+    char word[100]; // Buffer per le parole chiave ("MAPPA", "SPAWN")
 
-    while (file >> word) {
+    while (readNextWord(file, word)) {
         if (strcmp(word, "MAPPA") == 0) {
             char newLogic[20][81];
 
             for (int i = 0; i < 20; i++) {
-                file >> word;
                 for (int k = 0; k < 80; k++) {
-                    newLogic[i][k] = word[k];
+                    char c;
+                    // Scarta i caratteri di a capo o eventuali spazi
+                    while (file.get(c) && isWhitespace(c)) {}
+                    newLogic[i][k] = c;
                 }
                 newLogic[i][80] = '\0';
             }
@@ -42,13 +106,17 @@ Map* loadMapsFromFile(const char* fileName, WINDOW* win) {
             int spawnX = 0, spawnY = 0;
             int enemiesX[50], enemiesY[50], enemiesType[50];
             int numEnemies = 0;
+            char temp[20]; // Buffer temporaneo per leggere i numeri
 
-            while (file >> word && strcmp(word, "FINE_MAPPA") != 0) {
+            while (readNextWord(file, word) && strcmp(word, "FINE_MAPPA") != 0) {
                 if (strcmp(word, "SPAWN") == 0) {
-                    file >> spawnX >> spawnY;
+                    readNextWord(file, temp); spawnX = customAtoi(temp);
+                    readNextWord(file, temp); spawnY = customAtoi(temp);
                 }
                 else if (strcmp(word, "NEMICO") == 0) {
-                    file >> enemiesY[numEnemies] >> enemiesX[numEnemies] >> enemiesType[numEnemies];
+                    readNextWord(file, temp); enemiesY[numEnemies] = customAtoi(temp);
+                    readNextWord(file, temp); enemiesX[numEnemies] = customAtoi(temp);
+                    readNextWord(file, temp); enemiesType[numEnemies] = customAtoi(temp);
                     numEnemies++;
                 }
             }
