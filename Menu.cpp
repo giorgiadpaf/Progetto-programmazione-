@@ -2,44 +2,52 @@
 #include "Menu.hpp"
 
 int Menu::opzione() {
-    int selezione = 0; //0 = GIOCA, 1 = CLASSIFICA, 2 = ESCI
+    int selezione = 0; 
     int tasto;
 
     while (true) {
         clear();
-	
-	//definisco le scritte
-        const char* titolo = "--- BOMBERMAN ---";
-	const char* opt0   = (selezione == 0) ? "> GIOCA"      : "  GIOCA";
-	const char* opt1   = (selezione == 1) ? "> CLASSIFICA" : "  CLASSIFICA";
-	const char* opt2   = (selezione == 2) ? "> ESCI"       : "  ESCI";
- 
-	//variabile per il centro del titolo
-	int center= (COLS - strlen(titolo)) /2; //COLS=lunghezza massima colonne
-	
-	//stampo il titolo
-	mvprintw(8, center, "%s", titolo);
-
-	//stampo le opzioni
-	mvprintw(15, center+1, "%s", opt0);
-	mvprintw(16, center+1, "%s", opt1);
-	mvprintw(17, center+1, "%s", opt2);
-
-	refresh();
+    
+        const char* titolo[6] = {
+            "██████╗  ██████╗ ███╗   ███╗██████╗ ███████╗██████╗ ███╗   ███╗ █████╗ ███╗   ██╗",
+            "██╔══██╗██╔═══██╗████╗ ████║██╔══██╗██╔════╝██╔══██╗████╗ ████║██╔══██╗████╗  ██║",
+            "██████╔╝██║   ██║██╔████╔██║██████╔╝█████╗  ██████╔╝██╔████╔██║███████║██╔██╗ ██║",
+            "██╔══██╗██║   ██║██║╚██╔╝██║██╔══██╗██╔══╝  ██╔══██╗██║╚██╔╝██║██╔══██║██║╚██╗██║",
+            "██████╔╝╚██████╔╝██║ ╚═╝ ██║██████╔╝███████╗██║  ██║██║ ╚═╝ ██║██║  ██║██║ ╚████║",
+            "╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝"
+        };
         
-	//logica per "scorrere" le opzioni
+        int larghezza_titolo = 81; 
+        int center_titolo = (COLS - larghezza_titolo) / 2;
+
+        for (int i = 0; i < 6; i++) {
+            mvprintw(4 + i, center_titolo, "%s", titolo[i]);
+        }
+
+        const char* opt0 = (selezione == 0) ? "> NUOVA PARTITA"      : "  NUOVA PARTITA";
+        const char* opt1 = (selezione == 1) ? "> CLASSIFICA" : "  CLASSIFICA";
+        const char* opt2 = (selezione == 2) ? "> ESCI"       : "  ESCI";
+ 
+        int center_opt = (COLS - 12) / 2;
+
+        mvprintw(15, center_opt, "%s", opt0);
+        mvprintw(18, center_opt, "%s", opt1);
+        mvprintw(21, center_opt, "%s", opt2);
+
+        refresh();
+        
         tasto = getch();
         switch(tasto) {
             case KEY_UP:
-		    selezione--;
-		    if(selezione<0) selezione = 2; //se andiamo sopra GIOCA, va in fondo a ESCI
-		    break;
+                selezione--;
+                if(selezione < 0) selezione = 2;
+                break;
             case KEY_DOWN:
                 selezione++;
-                if(selezione>2) selezione = 0; //se andiamo sotto a ESCI, torna sopra su GIOCA
-		break;
-            case 10: //10=Invio/Enter
-		return selezione;
+                if(selezione > 2) selezione = 0; 
+                break;
+            case 10: 
+                return selezione;
         }
     }
 }
